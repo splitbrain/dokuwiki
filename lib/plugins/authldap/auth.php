@@ -160,7 +160,10 @@ class auth_plugin_authldap extends DokuWiki_Auth_Plugin {
      */
     protected function _getUserData($user, $inbind = false) {
         global $conf;
+        static $userCache = array();
+
         if(!$this->_openLDAP()) return false;
+        if(isset($userCache[$user])) return $userCache[$user];
 
         // force superuser bind if wanted and not bound as superuser yet
         if($this->getConf('binddn') && $this->getConf('bindpw') && $this->bound < 2) {
@@ -293,6 +296,7 @@ class auth_plugin_authldap extends DokuWiki_Auth_Plugin {
         if(!$info['grps'] or !in_array($conf['defaultgroup'], $info['grps'])) {
             $info['grps'][] = $conf['defaultgroup'];
         }
+        $userCache[$user] = $info;
         return $info;
     }
 
