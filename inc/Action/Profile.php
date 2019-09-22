@@ -39,7 +39,8 @@ class Profile extends AbstractUserAction {
 
     /** @inheritdoc */
     public function tplContent() {
-        html_updateprofile();
+        $ui = new \dokuwiki\Ui\Profile();
+        $ui->show();
     }
 
 }

@@ -108,6 +108,11 @@ $lang['profconfdelete']        = 'I wish to remove my account from this wiki. <b
 $lang['profconfdeletemissing'] = 'Confirmation check box not ticked';
 $lang['proffail']              = 'User profile was not updated.';
 
+
+$lang['proftokenlegend']       = 'Authentication Token';
+$lang['proftokengenerate']     = 'Reset Token';
+$lang['proftokeninfo']         = 'The Authentication Token can be used to let 3rd party applications to log in and act on your behalf. Resetting the token will invalidate the old one and log out all applications that used the one previous one.';
+
 $lang['pwdforget']             = 'Forgotten your password? Get a new one';
 $lang['resendna']              = 'This wiki does not support password resending.';
 $lang['resendpwd']             = 'Set new password for';
