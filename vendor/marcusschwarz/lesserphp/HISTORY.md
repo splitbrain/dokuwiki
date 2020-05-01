@@ -1,9 +1,14 @@
-# lesserphp v0.5.1
+# lesserphp v0.5.4
 
 Originally written by Leaf Corcoran, obviously abandoned circa 2014
 https://github.com/leafo/lessphp
 
 Last version provided by Leaf was 0.5.0
+
+### v.0.5.4
+* 2020-01-19: added 7.4 support to travis and removed antique php versions (@phy25)
+* 2020-01-19: fixed wrong array access in lib_luma
+* 2020-01-19: removed HHVM profile from travis. HHVM support is now broken anyway
 
 ### v.0.5.1
 * 2016-09-30: renaming it to lesserphp for easier distinction

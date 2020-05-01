@@ -273,7 +273,12 @@ class TableFormatter
         if (function_exists('mb_substr')) {
             return mb_substr($string, $start, $length);
         } else {
-            return substr($string, $start, $length);
+            // mb_substr() treats $length differently than substr()
+            if ($length) {
+                return substr($string, $start, $length);
+            } else {
+                return substr($string, $start);
+            }
         }
     }
 

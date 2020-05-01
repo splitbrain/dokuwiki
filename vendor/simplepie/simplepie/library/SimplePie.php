@@ -665,9 +665,9 @@ class SimplePie
 	 */
 	public function __construct()
 	{
-		if (version_compare(PHP_VERSION, '5.3', '<'))
+		if (version_compare(PHP_VERSION, '5.6', '<'))
 		{
-			trigger_error('Please upgrade to PHP 5.3 or newer.');
+			trigger_error('Please upgrade to PHP 5.6 or newer.');
 			die();
 		}
 
@@ -706,7 +706,7 @@ class SimplePie
 	 */
 	public function __destruct()
 	{
-		if ((version_compare(PHP_VERSION, '5.3', '<') || !gc_enabled()) && !ini_get('zend.ze1_compatibility_mode'))
+		if ((version_compare(PHP_VERSION, '5.6', '<') || !gc_enabled()) && !ini_get('zend.ze1_compatibility_mode'))
 		{
 			if (!empty($this->data['items']))
 			{
@@ -1251,8 +1251,8 @@ class SimplePie
 	/**
 	 * Set the handler to enable the display of cached images.
 	 *
-	 * @param str $page Web-accessible path to the handler_image.php file.
-	 * @param str $qs The query string that the value should be passed to.
+	 * @param string $page Web-accessible path to the handler_image.php file.
+	 * @param string $qs The query string that the value should be passed to.
 	 */
 	public function set_image_handler($page = false, $qs = 'i')
 	{
@@ -1712,8 +1712,8 @@ class SimplePie
 					}
 					$cache = $this->registry->call('Cache', 'get_handler', array($this->cache_location, call_user_func($this->cache_name_function, $file->url), 'spc'));
 				}
-				$this->feed_url = $file->url;
 			}
+			$this->feed_url = $file->url;
 			$locate = null;
 		}
 
@@ -1911,7 +1911,8 @@ class SimplePie
 	 *
 	 * When the 'permanent' mode is disabled (default),
 	 * may or may not be different from the URL passed to {@see set_feed_url()},
-	 * depending on whether auto-discovery was used.
+	 * depending on whether auto-discovery was used, and whether there were
+	 * any redirects along the way.
 	 *
 	 * @since Preview Release (previously called `get_feed_url()` since SimplePie 0.8.)
 	 * @todo Support <itunes:new-feed-url>

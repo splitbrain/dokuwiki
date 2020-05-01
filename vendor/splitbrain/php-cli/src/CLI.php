@@ -21,7 +21,7 @@ abstract class CLI
 
     /** @var array PSR-3 compatible loglevels and their prefix, color, output channel */
     protected $loglevel = array(
-        'debug' => array('', Colors::C_LIGHTGRAY, STDOUT),
+        'debug' => array('', Colors::C_RESET, STDOUT),
         'info' => array('ℹ ', Colors::C_CYAN, STDOUT),
         'notice' => array('☛ ', Colors::C_CYAN, STDOUT),
         'success' => array('✓ ', Colors::C_GREEN, STDOUT),
@@ -108,7 +108,7 @@ abstract class CLI
     {
         $this->options->registerOption(
             'help',
-            'Display this help screen and exit immeadiately.',
+            'Display this help screen and exit immediately.',
             'h'
         );
         $this->options->registerOption(

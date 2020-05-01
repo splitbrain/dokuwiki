@@ -58,6 +58,14 @@ class Options
 
         $this->options = array();
     }
+    
+    /**
+     * Gets the bin value
+     */
+    public function getBin()
+    {
+        return $this->bin;
+    }
 
     /**
      * Sets the help text for the tool itself

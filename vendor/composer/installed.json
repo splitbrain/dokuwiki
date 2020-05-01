@@ -86,23 +86,23 @@
     },
     {
         "name": "marcusschwarz/lesserphp",
-        "version": "v0.5.2",
-        "version_normalized": "0.5.2.0",
+        "version": "v0.5.4",
+        "version_normalized": "0.5.4.0",
         "source": {
             "type": "git",
             "url": "https://github.com/MarcusSchwarz/lesserphp.git",
-            "reference": "b02ee973ee1fff3237f7feaf44885596fb5ee323"
+            "reference": "3a0f5ae0d63cbb661b5f4afd2f96875e73b3ad7e"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/MarcusSchwarz/lesserphp/zipball/b02ee973ee1fff3237f7feaf44885596fb5ee323",
-            "reference": "b02ee973ee1fff3237f7feaf44885596fb5ee323",
+            "url": "https://api.github.com/repos/MarcusSchwarz/lesserphp/zipball/3a0f5ae0d63cbb661b5f4afd2f96875e73b3ad7e",
+            "reference": "3a0f5ae0d63cbb661b5f4afd2f96875e73b3ad7e",
             "shasum": ""
         },
         "require-dev": {
             "phpunit/phpunit": "~4.3"
         },
-        "time": "2018-05-28T12:54:01+00:00",
+        "time": "2020-01-19T19:18:49+00:00",
         "bin": [
             "plessc"
         ],
@@ -338,17 +338,17 @@
     },
     {
         "name": "simplepie/simplepie",
-        "version": "1.5.3",
-        "version_normalized": "1.5.3.0",
+        "version": "1.5.4",
+        "version_normalized": "1.5.4.0",
         "source": {
             "type": "git",
             "url": "https://github.com/simplepie/simplepie.git",
-            "reference": "173663382a9346acd53df60c7ffb20689c9cf1f6"
+            "reference": "f4c8246511a38fc9d99a59fb42f61eeeafb31663"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/simplepie/simplepie/zipball/173663382a9346acd53df60c7ffb20689c9cf1f6",
-            "reference": "173663382a9346acd53df60c7ffb20689c9cf1f6",
+            "url": "https://api.github.com/repos/simplepie/simplepie/zipball/f4c8246511a38fc9d99a59fb42f61eeeafb31663",
+            "reference": "f4c8246511a38fc9d99a59fb42f61eeeafb31663",
             "shasum": ""
         },
         "require": {
@@ -367,7 +367,7 @@
             "ext-mbstring": "",
             "mf2/mf2": "Microformat module that allows for parsing HTML for microformats"
         },
-        "time": "2019-09-22T23:21:30+00:00",
+        "time": "2019-11-23T07:05:15+00:00",
         "type": "library",
         "installation-source": "dist",
         "autoload": {
@@ -463,17 +463,17 @@
     },
     {
         "name": "splitbrain/php-cli",
-        "version": "1.1.5",
-        "version_normalized": "1.1.5.0",
+        "version": "1.1.6",
+        "version_normalized": "1.1.6.0",
         "source": {
             "type": "git",
             "url": "https://github.com/splitbrain/php-cli.git",
-            "reference": "e982d40d074ab9f2669c3c0a2e40559b098cd894"
+            "reference": "b7be3726872547253dd0bd61098fa9f634c33555"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/splitbrain/php-cli/zipball/e982d40d074ab9f2669c3c0a2e40559b098cd894",
-            "reference": "e982d40d074ab9f2669c3c0a2e40559b098cd894",
+            "url": "https://api.github.com/repos/splitbrain/php-cli/zipball/b7be3726872547253dd0bd61098fa9f634c33555",
+            "reference": "b7be3726872547253dd0bd61098fa9f634c33555",
             "shasum": ""
         },
         "require": {
@@ -485,7 +485,7 @@
         "suggest": {
             "psr/log": "Allows you to make the CLI available as PSR-3 logger"
         },
-        "time": "2018-09-29T07:51:34+00:00",
+        "time": "2019-10-16T07:31:14+00:00",
         "type": "library",
         "installation-source": "dist",
         "autoload": {
