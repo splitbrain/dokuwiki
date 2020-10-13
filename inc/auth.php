@@ -279,7 +279,7 @@ function auth_login($user, $pass, $sticky = false, $silent = false) {
  *
  * @author  Andreas Gohr <andi@splitbrain.org>
  *
- * @return  string  a MD5 sum of various browser headers
+ * @return  string  a SHA256 sum of various browser headers
  */
 function auth_browseruid() {
     /* @var Input $INPUT */
@@ -288,10 +288,13 @@ function auth_browseruid() {
     $ip  = clientIP(true);
     $uid = '';
     $uid .= $INPUT->server->str('HTTP_USER_AGENT');
-    $uid .= $INPUT->server->str('HTTP_ACCEPT_CHARSET');
-    $uid .= substr($ip, 0, strpos($ip, '.'));
-    $uid = strtolower($uid);
-    return md5($uid);
+    $uid .= $INPUT->server->str('HTTP_ACCEPT_LANGUAGE');
+    $uid .= $INPUT->server->str('HTTP_ACCEPT_ENCODING');
+    // convert IP string to packed binary representation
+    $pip = inet_pton($ip);
+    // use half of the IP address (works for both IPv4 and IPv6)
+    $uid .= substr($pip, 0, strlen($pip)/2);
+    return hash('sha256', $uid);
 }
 
 /**
