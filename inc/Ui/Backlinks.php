@@ -4,6 +4,7 @@ namespace dokuwiki\Ui;
 
 use dokuwiki\Extension\Event;
 use dokuwiki\Form\Form;
+use dokuwiki\Search\MetadataIndex;
 
 /**
  * DokuWiki Backlinks Interface
@@ -28,7 +29,7 @@ class Backlinks extends Ui
         // print intro
         print p_locale_xhtml('backlinks');
 
-        $data = ft_backlinks($ID);
+        $data = (new MetadataIndex())->backlinks($ID);
 
         if (!empty($data)) {
             print '<ul class="idx">';

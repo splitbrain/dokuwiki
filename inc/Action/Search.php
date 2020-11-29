@@ -3,6 +3,9 @@
 namespace dokuwiki\Action;
 
 use dokuwiki\Action\Exception\ActionAbort;
+use dokuwiki\Search\FulltextSearch;
+use dokuwiki\Search\MetadataSearch;
+use dokuwiki\Search\QueryParser;
 
 /**
  * Class Search
@@ -66,8 +69,12 @@ class Search extends AbstractAction {
         global $INPUT, $QUERY;
         $after = $INPUT->str('min');
         $before = $INPUT->str('max');
-        $this->pageLookupResults = ft_pageLookup($QUERY, true, useHeading('navigation'), $after, $before);
-        $this->fullTextResults = ft_pageSearch($QUERY, $highlight, $INPUT->str('srt'), $after, $before);
+        $this->pageLookupResults = (new MetadataSearch)->pageLookup(
+                $QUERY, true, useHeading('navigation'), $after, $before
+        );
+        $this->fullTextResults = (new FulltextSearch)->pageSearch(
+                $QUERY, $highlight, $INPUT->str('srt'), $after, $before
+        );
         $this->highlight = $highlight;
     }
 
@@ -84,8 +91,7 @@ class Search extends AbstractAction {
             return;
         }
 
-        $Indexer = idx_get_indexer();
-        $parsedQuery = ft_queryParser($Indexer, $QUERY);
+        $parsedQuery = (new QueryParser)->convert($QUERY);
 
         if (empty($parsedQuery['ns']) && empty($parsedQuery['notns'])) {
             if ($conf['search_nslimit'] > 0) {

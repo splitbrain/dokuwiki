@@ -8,7 +8,9 @@
 
 namespace dokuwiki\Sitemap;
 
+use dokuwiki\Extension\Event;
 use dokuwiki\HTTP\DokuHTTPClient;
+use dokuwiki\Search\Indexer;
 
 /**
  * A class for building sitemaps and pinging search engines with the sitemap URL.
@@ -29,42 +31,44 @@ class Mapper {
      *
      * @return bool
      */
-    public static function generate(){
+    public static function generate()
+    {
         global $conf;
-        if($conf['sitemap'] < 1 || !is_numeric($conf['sitemap'])) return false;
+        if ($conf['sitemap'] < 1 || !is_numeric($conf['sitemap'])) return false;
 
         $sitemap = Mapper::getFilePath();
 
-        if(file_exists($sitemap)){
-            if(!is_writable($sitemap)) return false;
-        }else{
-            if(!is_writable(dirname($sitemap))) return false;
+        if (file_exists($sitemap)) {
+            if (!is_writable($sitemap)) return false;
+        } else {
+            if (!is_writable(dirname($sitemap))) return false;
         }
 
-        if(@filesize($sitemap) &&
-           @filemtime($sitemap) > (time()-($conf['sitemap']*86400))){ // 60*60*24=86400
+        if (@filesize($sitemap) &&
+            @filemtime($sitemap) > (time()-($conf['sitemap']*86400)) // 60*60*24=86400
+        ) {
             dbglog('Sitemapper::generate(): Sitemap up to date');
             return false;
         }
 
         dbglog("Sitemapper::generate(): using $sitemap");
 
-        $pages = idx_get_indexer()->getPages();
+        $pages = (new Indexer())->getPages();
         dbglog('Sitemapper::generate(): creating sitemap using '.count($pages).' pages');
         $items = array();
 
         // build the sitemap items
-        foreach($pages as $id){
+        foreach ($pages as $id) {
             //skip hidden, non existing and restricted files
-            if(isHiddenPage($id)) continue;
-            if(auth_aclcheck($id,'',array()) < AUTH_READ) continue;
+            if (isHiddenPage($id)) continue;
+            if (auth_aclcheck($id,'',array()) < AUTH_READ) continue;
             $item = Item::createFromID($id);
             if ($item !== null)
                 $items[] = $item;
         }
 
         $eventData = array('items' => &$items, 'sitemap' => &$sitemap);
-        $event = new \dokuwiki\Extension\Event('SITEMAP_GENERATE', $eventData);
+        $event = new Event('SITEMAP_GENERATE', $eventData);
         if ($event->advise_before(true)) {
             //save the new sitemap
             $event->result = io_saveFile($sitemap, Mapper::getXML($items));
@@ -82,7 +86,8 @@ class Mapper {
      *
      * @author Michael Hamann
      */
-    private static function getXML($items) {
+    private static function getXML($items)
+    {
         ob_start();
         echo '<?xml version="1.0" encoding="UTF-8"?>'.NL;
         echo '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'.NL;
@@ -103,7 +108,8 @@ class Mapper {
      *
      * @author Michael Hamann
      */
-    public static function getFilePath() {
+    public static function getFilePath()
+    {
         global $conf;
 
         $sitemap = $conf['cachedir'].'/sitemap.xml';
@@ -119,7 +125,8 @@ class Mapper {
      *
      * @return bool If the sitemap file is compressed
      */
-    public static function sitemapIsCompressed() {
+    public static function sitemapIsCompressed()
+    {
         global $conf;
         return $conf['compression'] === 'bz2' || $conf['compression'] === 'gz';
     }
@@ -132,7 +139,8 @@ class Mapper {
      *
      * @return bool
      */
-    public static function pingSearchEngines() {
+    public static function pingSearchEngines()
+    {
         //ping search engines...
         $http = new DokuHTTPClient();
         $http->timeout = 8;
@@ -144,15 +152,16 @@ class Mapper {
             'yandex'    => 'http://blogs.yandex.ru/pings/?status=success&url='.$encoded_sitemap_url
         );
 
-        $data = array('ping_urls' => $ping_urls,
-                            'encoded_sitemap_url' => $encoded_sitemap_url
+        $data = array(
+            'ping_urls' => $ping_urls,
+            'encoded_sitemap_url' => $encoded_sitemap_url
         );
-        $event = new \dokuwiki\Extension\Event('SITEMAP_PING', $data);
+        $event = new Event('SITEMAP_PING', $data);
         if ($event->advise_before(true)) {
             foreach ($data['ping_urls'] as $name => $url) {
                 dbglog("Sitemapper::PingSearchEngines(): pinging $name");
                 $resp = $http->get($url);
-                if($http->error) dbglog("Sitemapper:pingSearchengines(): $http->error");
+                if ($http->error) dbglog("Sitemapper:pingSearchengines(): $http->error");
                 dbglog('Sitemapper:pingSearchengines(): '.preg_replace('/[\n\r]/',' ',strip_tags($resp)));
             }
         }
@@ -161,4 +170,3 @@ class Mapper {
         return true;
     }
 }
-

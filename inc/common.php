@@ -13,6 +13,7 @@ use dokuwiki\Subscriptions\PageSubscriptionSender;
 use dokuwiki\Subscriptions\SubscriberManager;
 use dokuwiki\Extension\AuthPlugin;
 use dokuwiki\Extension\Event;
+use dokuwiki\Search\MetadataIndex;
 
 /**
  * Wrapper around htmlspecialchars()
@@ -1348,32 +1349,32 @@ function saveWikiText($id, $text, $summary, $minor = false) {
     $svdta['sizechange']     = null;
 
     // select changelog line type
-    if($REV) {
+    if ($REV) {
         $svdta['changeType']  = DOKU_CHANGE_TYPE_REVERT;
         $svdta['changeInfo'] = $REV;
-    } else if(!file_exists($svdta['file'])) {
+    } elseif (!file_exists($svdta['file'])) {
         $svdta['changeType'] = DOKU_CHANGE_TYPE_CREATE;
-    } else if(trim($text) == '') {
+    } elseif (trim($text) == '') {
         // empty or whitespace only content deletes
         $svdta['changeType'] = DOKU_CHANGE_TYPE_DELETE;
         // autoset summary on deletion
-        if(blank($svdta['summary'])) {
+        if (blank($svdta['summary'])) {
             $svdta['summary'] = $lang['deleted'];
         }
-    } else if($minor && $conf['useacl'] && $INPUT->server->str('REMOTE_USER')) {
+    } elseif ($minor && $conf['useacl'] && $INPUT->server->str('REMOTE_USER')) {
         //minor edits only for logged in users
         $svdta['changeType'] = DOKU_CHANGE_TYPE_MINOR_EDIT;
     }
 
     $event = new Event('COMMON_WIKIPAGE_SAVE', $svdta);
-    if(!$event->advise_before()) return;
+    if (!$event->advise_before()) return;
 
     // if the content has not been changed, no save happens (plugins may override this)
     if(!$svdta['contentChanged']) return;
 
     detectExternalEdit($id);
 
-    if(
+    if (
         $svdta['changeType'] == DOKU_CHANGE_TYPE_CREATE ||
         ($svdta['changeType'] == DOKU_CHANGE_TYPE_REVERT && !file_exists($svdta['file']))
     ) {
@@ -1381,7 +1382,7 @@ function saveWikiText($id, $text, $summary, $minor = false) {
     } else {
         $filesize_old = filesize($svdta['file']);
     }
-    if($svdta['changeType'] == DOKU_CHANGE_TYPE_DELETE) {
+    if ($svdta['changeType'] == DOKU_CHANGE_TYPE_DELETE) {
         // Send "update" event with empty data, so plugins can react to page deletion
         $data = array(array($svdta['file'], '', false), getNS($id), noNS($id), false);
         Event::createAndTrigger('IO_WIKIPAGE_WRITE', $data);
@@ -1428,9 +1429,9 @@ function saveWikiText($id, $text, $summary, $minor = false) {
     io_saveFile($conf['cachedir'].'/purgefile', time());
 
     // if useheading is enabled, purge the cache of all linking pages
-    if(useHeading('content')) {
-        $pages = ft_backlinks($id, true);
-        foreach($pages as $page) {
+    if (useHeading('content')) {
+        $pages = (new MetadataIndex())->backlinks($id, true);
+        foreach ($pages as $page) {
             $cache = new CacheRenderer($page, wikiFN($page), 'xhtml');
             $cache->removeCache();
         }

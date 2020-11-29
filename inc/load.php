@@ -19,10 +19,8 @@ require_once(DOKU_INC.'inc/common.php');
 require_once(DOKU_INC.'inc/confutils.php');
 require_once(DOKU_INC.'inc/pluginutils.php');
 require_once(DOKU_INC.'inc/form.php');
-require_once(DOKU_INC.'inc/fulltext.php');
 require_once(DOKU_INC.'inc/html.php');
 require_once(DOKU_INC.'inc/httputils.php');
-require_once(DOKU_INC.'inc/indexer.php');
 require_once(DOKU_INC.'inc/infoutils.php');
 require_once(DOKU_INC.'inc/io.php');
 require_once(DOKU_INC.'inc/mail.php');
@@ -51,9 +49,9 @@ require_once(DOKU_INC.'inc/legacy.php');
  *
  * @return bool
  */
-function load_autoload($name){
+function load_autoload($name) {
     static $classes = null;
-    if($classes === null) $classes = array(
+    if ($classes === null) $classes = array(
         'Diff'                  => DOKU_INC.'inc/DifferenceEngine.php',
         'UnifiedDiffFormatter'  => DOKU_INC.'inc/DifferenceEngine.php',
         'TableDiffFormatter'    => DOKU_INC.'inc/DifferenceEngine.php',
@@ -73,7 +71,7 @@ function load_autoload($name){
         'Sitemapper'            => DOKU_INC.'inc/Sitemapper.php',
         'Mailer'                => DOKU_INC.'inc/Mailer.class.php',
 
-        'Doku_Handler'          => DOKU_INC.'inc/parser/handler.php',
+        'Doku_Handler'           => DOKU_INC.'inc/parser/handler.php',
         'Doku_Renderer'          => DOKU_INC.'inc/parser/renderer.php',
         'Doku_Renderer_xhtml'    => DOKU_INC.'inc/parser/xhtml.php',
         'Doku_Renderer_code'     => DOKU_INC.'inc/parser/code.php',
@@ -86,7 +84,7 @@ function load_autoload($name){
 
     );
 
-    if(isset($classes[$name])){
+    if (isset($classes[$name])) {
         require ($classes[$name]);
         return true;
     }
@@ -95,45 +93,45 @@ function load_autoload($name){
     $name = str_replace('\\', '/', $name);
 
     // test namespace
-    if(substr($name, 0, 14) === 'dokuwiki/test/') {
+    if (substr($name, 0, 14) === 'dokuwiki/test/') {
         $file = DOKU_INC . '_test/' . substr($name, 14) . '.php';
-        if(file_exists($file)) {
+        if (file_exists($file)) {
             require $file;
             return true;
         }
     }
 
     // plugin namespace
-    if(substr($name, 0, 16) === 'dokuwiki/plugin/') {
+    if (substr($name, 0, 16) === 'dokuwiki/plugin/') {
         $name = str_replace('/test/', '/_test/', $name); // no underscore in test namespace
         $file = DOKU_PLUGIN . substr($name, 16) . '.php';
-        if(file_exists($file)) {
+        if (file_exists($file)) {
             require $file;
             return true;
         }
     }
 
     // template namespace
-    if(substr($name, 0, 18) === 'dokuwiki/template/') {
+    if (substr($name, 0, 18) === 'dokuwiki/template/') {
         $name = str_replace('/test/', '/_test/', $name); // no underscore in test namespace
         $file = DOKU_INC.'lib/tpl/' . substr($name, 18) . '.php';
-        if(file_exists($file)) {
+        if (file_exists($file)) {
             require $file;
             return true;
         }
     }
 
     // our own namespace
-    if(substr($name, 0, 9) === 'dokuwiki/') {
+    if (substr($name, 0, 9) === 'dokuwiki/') {
         $file = DOKU_INC . 'inc/' . substr($name, 9) . '.php';
-        if(file_exists($file)) {
+        if (file_exists($file)) {
             require $file;
             return true;
         }
     }
 
     // Plugin loading
-    if(preg_match(
+    if (preg_match(
         '/^(' . implode('|', PluginController::PLUGIN_TYPES) . ')_plugin_(' .
         DOKU_PLUGIN_NAME_REGEX .
         ')(?:_([^_]+))?$/',
@@ -143,7 +141,7 @@ function load_autoload($name){
         // try to load the wanted plugin file
         $c = ((count($m) === 4) ? "/{$m[3]}" : '');
         $plg = DOKU_PLUGIN . "{$m[2]}/{$m[1]}$c.php";
-        if(file_exists($plg)){
+        if (file_exists($plg)) {
             require $plg;
         }
         return true;

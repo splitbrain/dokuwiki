@@ -7,6 +7,9 @@
  */
 
 use dokuwiki\HTTP\DokuHTTPClient;
+use dokuwiki\Search\MetadataIndex;
+use dokuwiki\Search\FulltextIndex;
+use dokuwiki\Utf8;
 
 if(!defined('DOKU_MESSAGEURL')){
     if(in_array('ssl', stream_get_transports())) {
@@ -257,18 +260,21 @@ function check(){
         msg('The current page is not writable by you', -1);
     }
 
-    // Check for corrupted search index
-    $lengths = idx_listIndexLengths();
+    // Check for corrupted fulltext search index
+    $FulltextIndex = new FulltextIndex();
+    $lengths = $FulltextIndex->listIndexLengths();
     $index_corrupted = false;
     foreach ($lengths as $length) {
-        if (count(idx_getIndex('w', $length)) != count(idx_getIndex('i', $length))) {
+        if (count($FulltextIndex->getIndex('w', $length)) != count($FulltextIndex->getIndex('i', $length))) {
             $index_corrupted = true;
             break;
         }
     }
 
-    foreach (idx_getIndex('metadata', '') as $index) {
-        if (count(idx_getIndex($index.'_w', '')) != count(idx_getIndex($index.'_i', ''))) {
+    // Check for corrupted metadata index
+    $MetadataIndex = new MetadataIndex();
+    foreach ($MetadataIndex->getIndex('metadata', '') as $name) {
+        if (count($MetadataIndex->getIndex($name.'_w', '')) != count($MetadataIndex->getIndex($name.'_i', ''))) {
             $index_corrupted = true;
             break;
         }

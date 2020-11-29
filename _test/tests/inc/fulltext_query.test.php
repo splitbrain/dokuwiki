@@ -1,5 +1,7 @@
 <?php
 
+use dokuwiki\Search\QueryParser;
+
 // must be run within Dokuwiki
 if (!defined('DOKU_INC')) {
     die();
@@ -16,10 +18,9 @@ class fulltext_query_test extends DokuWikiTest
 {
     public function test_parse_query()
     {
-        $Indexer = idx_get_indexer();
         $inputQuery = 'test -baz "foo bar" @abc ^def';
 
-        $actualParsedQuery = ft_queryParser($Indexer, $inputQuery);
+        $actualParsedQuery = (new QueryParser)->convert($inputQuery);
 
         $expectedParsedQuery = [
             'query' => 'test -baz "foo bar" @abc ^def',
@@ -90,7 +91,7 @@ class fulltext_query_test extends DokuWikiTest
             ],
         ];
 
-        $actualQuery = ft_queryUnparser_simple(
+        $actualQuery = (new QueryParser)->revert(
             $input['and'],
             $input['not'],
             $input['phrases'],

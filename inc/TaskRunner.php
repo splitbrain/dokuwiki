@@ -3,6 +3,7 @@
 namespace dokuwiki;
 
 use dokuwiki\Extension\Event;
+use dokuwiki\Search\Indexer;
 use dokuwiki\Sitemap\Mapper;
 use dokuwiki\Subscriptions\BulkSubscriptionSender;
 
@@ -195,7 +196,14 @@ class TaskRunner
         }
 
         // do the work
-        return idx_addPage($ID, true);
+        try {
+            return (new Indexer($ID))->dispatch(true);
+        } catch (Search\Exception\SearchException $e) {
+            $msg = get_class($e) .' : '. $e->getMessage();
+            echo $msg;
+            dbglog($msg);
+            return false;
+        }
     }
 
     /**

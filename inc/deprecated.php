@@ -1,5 +1,5 @@
 <?php
-// phpcs:ignoreFile -- this file violates PSR2 by definition
+// phpcs:ignoreFile -- this file violates PSR-12 by definition
 /**
  * These classes and functions are deprecated and will be removed in future releases
  */
@@ -568,3 +568,117 @@ class Subscription {
  * @deprecated 2019-12-29 use \dokuwiki\Search\Indexer
  */
 class Doku_Indexer extends \dokuwiki\Search\Indexer {};
+
+/**
+ * Functions to access the fulltext search index
+ *
+ * @license    GPL 2 (http://www.gnu.org/licenses/gpl.html)
+ * @author     Andreas Gohr <andi@splitbrain.org>
+ * @author     Tom N Harris <tnharris@whoopdedo.org>
+ */
+
+/** @deprecated 2019-12-16 */
+function idx_get_version() {
+    dbg_deprecated('\dokuwiki\Search\Indexer::getVersion()');
+    return (new \dokuwiki\Search\Indexer())->getVersion();
+}
+
+/** @deprecated 2019-12-16 */
+function idx_addPage($page, $verbose=false, $force=false) {
+    dbg_deprecated('\dokuwiki\Search\Indexer::addPage()');
+    return (new \dokuwiki\Search\Indexer($page))->addPage($verbose, $force);
+}
+
+/** @deprecated 2019-12-16 */
+function idx_getIndex($idx, $suffix) {
+    dbg_deprecated('\dokuwiki\Search\Indexer::getIndex()');
+    return (new \dokuwiki\Search\Indexer())->getIndex($idx, $suffix);
+}
+
+/** @deprecated 2019-12-16 */
+function idx_listIndexLengths() {
+    dbg_deprecated('\dokuwiki\Search\FulltextIndex::listIndexLengths()');
+    return (new \dokuwiki\Search\FulltextIndex())->listIndexLengths();
+}
+
+/** @deprecated 2019-12-16 */
+function idx_indexLengths($filter) {
+    dbg_deprecated('\dokuwiki\Search\FulltextIndex::getIndexLengths()');
+    return (new \dokuwiki\Search\FulltextIndex())->getIndexLengths($filter);
+}
+
+/**
+ * Create MetadataIndex instance, which supports following methods:
+ *    addMetaKeys($page, $key, $value=null)
+ *    lookupKey($key, &$value, $func=null)
+ *    getPages($key=null)
+ * @see also https://www.dokuwiki.org/devel:metadata#metadata_index
+ *
+ * @deprecated 2020-01-30
+ */
+function idx_get_indexer() {
+    dbg_deprecated('\dokuwiki\Search\MetadataIndex()');
+    return new \dokuwiki\Search\MetadataIndex();
+}
+
+/**
+ * DokuWiki fulltextsearch functions using the index
+ *
+ * @license    GPL 2 (http://www.gnu.org/licenses/gpl.html)
+ * @author     Andreas Gohr <andi@splitbrain.org>
+ */
+
+/**
+ * Functions for Fulltext Search
+ */
+/** @deprecated 2019-12-28 */
+function ft_pageSearch($query, &$highlight, $sort = null, $after = null, $before = null) {
+    dbg_deprecated('\dokuwiki\Search\FulltextSearch::pageSearch()');
+    return (new \dokuwiki\Search\FulltextSearch)->pageSearch($query, $highlight, $sort, $after, $before);
+}
+
+/** @deprecated 2019-12-28 */
+function ft_snippet($id, $highlight) {
+    dbg_deprecated('\dokuwiki\Search\FulltextSearch::snippet()');
+    return (new \dokuwiki\Search\FulltextSearch)->snippet($id, $highlight);
+}
+
+/** @deprecated 2019-12-28 */
+function ft_snippet_re_preprocess($term) {
+    dbg_deprecated('\dokuwiki\Search\FulltextSearch::snippetRePreprocess()');
+    return (new \dokuwiki\Search\FulltextSearch)->snippetRePreprocess($term);
+}
+
+/** @deprecated 2019-12-28 */
+function ft_queryParser($Indexer, $query) {
+    dbg_deprecated('\dokuwiki\Search\QueryParser::convert()');
+    return (new \dokuwiki\Search\QueryParser)->convert($query);
+}
+
+/** @deprecated 2019-12-28 */
+function ft_queryUnparser_simple(array $and, array $not, array $phrases, array $ns, array $notns) {
+    dbg_deprecated('\dokuwiki\Search\QueryParser::revert()');
+    return (new \dokuwiki\Search\QueryParser)->revert($and, $not, $phrases, $ns, $notns);
+}
+
+/**
+ * Functions for metadata lookups
+ */
+/** @deprecated 2019-12-28 */
+function ft_pageLookup($id, $in_ns=false, $in_title=false, $after = null, $before = null) {
+    dbg_deprecated('\dokuwiki\Search\MetadataSearch::pageLookup()');
+    return (new \dokuwiki\Search\MetadataSearch)->pageLookup($id, $in_ns, $in_title, $after, $before);
+}
+
+/** @deprecated 2019-12-28 */
+function ft_backlinks($id, $ignore_perms = false) {
+    dbg_deprecated('\dokuwiki\Search\MetadataIndex::backlinks()');
+    return (new \dokuwiki\Search\MetadataIndex())->backlinks($id, $ignore_perms);
+}
+
+/** @deprecated 2019-12-28 */
+function ft_mediause($id, $ignore_perms = false) {
+    dbg_deprecated('\dokuwiki\Search\MetadataIndex::mediause()');
+    return (new \dokuwiki\Search\MetadataIndex())->mediause($id, $ignore_perms);
+}
+

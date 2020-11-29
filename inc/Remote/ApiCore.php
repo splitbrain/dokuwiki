@@ -6,7 +6,12 @@ use Doku_Renderer_xhtml;
 use dokuwiki\ChangeLog\MediaChangeLog;
 use dokuwiki\ChangeLog\PageChangeLog;
 use dokuwiki\Extension\Event;
+use dokuwiki\Search\Indexer;
+use dokuwiki\Search\FulltextSearch;
+use dokuwiki\Search\MetadataIndex;
 use dokuwiki\Utf8\Sort;
+
+use const dokuwiki\Search\FT_SNIPPET_NUMBER;
 
 define('DOKU_API_VERSION', 10);
 
@@ -309,7 +314,8 @@ class ApiCore
     public function listPages()
     {
         $list = array();
-        $pages = idx_get_indexer()->getPages();
+
+        $pages = (new Indexer())->getPages();
         $pages = array_filter(array_filter($pages, 'isVisiblePage'), 'page_exists');
         Sort::ksort($pages);
 
@@ -361,7 +367,8 @@ class ApiCore
     public function search($query)
     {
         $regex = array();
-        $data = ft_pageSearch($query, $regex);
+        $FulltextSearch = new FulltextSearch();
+        $data = $FulltextSearch->pageSearch($query, $regex);
         $pages = array();
 
         // prepare additional data
@@ -370,7 +377,7 @@ class ApiCore
             $file = wikiFN($id);
 
             if ($idx < FT_SNIPPET_NUMBER) {
-                $snippet = ft_snippet($id, $regex);
+                $snippet = $FulltextSearch->snippet($id, $regex);
                 $idx++;
             } else {
                 $snippet = '';
@@ -455,7 +462,7 @@ class ApiCore
      */
     public function listBackLinks($id)
     {
-        return ft_backlinks($this->resolvePageId($id));
+        return (new MetadataIndex())->backlinks($this->resolvePageId($id));
     }
 
     /**
@@ -559,7 +566,7 @@ class ApiCore
         unlock($id);
 
         // run the indexer if page wasn't indexed yet
-        idx_addPage($id);
+        (new Indexer($id))->addPage();
 
         return true;
     }

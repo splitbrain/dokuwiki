@@ -2,6 +2,8 @@
 
 namespace dokuwiki\Ui;
 
+use dokuwiki\Search\QueryParser;
+
 class SearchState
 {
     /**
@@ -117,7 +119,7 @@ class SearchState
             'target' => $conf['target']['wiki'],
         ];
 
-        $newQuery = ft_queryUnparser_simple(
+        $newQuery = (new QueryParser)->revert(
             $parsedQuery['and'],
             $parsedQuery['not'],
             $parsedQuery['phrases'],

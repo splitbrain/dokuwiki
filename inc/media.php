@@ -10,6 +10,7 @@ use dokuwiki\ChangeLog\MediaChangeLog;
 use dokuwiki\HTTP\DokuHTTPClient;
 use dokuwiki\Subscriptions\MediaSubscriptionSender;
 use dokuwiki\Extension\Event;
+use dokuwiki\Search\MetadataIndex;
 use dokuwiki\Form\Form;
 use dokuwiki\Utf8\Sort;
 
@@ -212,9 +213,9 @@ function media_metaform($id, $auth) {
 function media_inuse($id) {
     global $conf;
 
-    if($conf['refcheck']){
-        $mediareferences = ft_mediause($id,true);
-        if(!count($mediareferences)) {
+    if ($conf['refcheck']) {
+        $mediareferences = (new MetadataIndex())->mediause($id, true);
+        if (!count($mediareferences)) {
             return false;
         } else {
             return $mediareferences;
@@ -1185,31 +1186,34 @@ function media_file_tags($meta) {
  * @param string|int    $rev   revision timestamp, or empty string
  * @param bool|JpegMeta $meta  image object, or create one if false
  */
-function media_details($image, $auth, $rev='', $meta=false) {
+function media_details($image, $auth, $rev = '', $meta = false) {
     global $lang;
 
     if (!$meta) $meta = new JpegMeta(mediaFN($image, $rev));
     $tags = media_file_tags($meta);
 
     echo '<dl>'.NL;
-    foreach($tags as $tag){
+    foreach ($tags as $tag) {
         if ($tag['value']) {
             $value = cleanText($tag['value']);
             echo '<dt>'.$lang[$tag['tag'][1]].'</dt><dd>';
-            if ($tag['tag'][2] == 'date') echo dformat($value);
-            else echo hsc($value);
+            if ($tag['tag'][2] == 'date') {
+                echo dformat($value);
+            } else {
+                echo hsc($value);
+            }
             echo '</dd>'.NL;
         }
     }
     echo '</dl>'.NL;
     echo '<dl>'.NL;
     echo '<dt>'.$lang['reference'].':</dt>';
-    $media_usage = ft_mediause($image,true);
-    if(count($media_usage) > 0){
-        foreach($media_usage as $path){
+    $media_usage = (new MetadataIndex())->mediause($image, true);
+    if (count($media_usage) > 0) {
+        foreach ($media_usage as $path) {
             echo '<dd>'.html_wikilink($path).'</dd>';
         }
-    }else{
+    } else {
         echo '<dd>'.$lang['nothingfound'].'</dd>';
     }
     echo '</dl>'.NL;
