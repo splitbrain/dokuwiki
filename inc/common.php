@@ -1139,7 +1139,7 @@ function parsePageTemplate(&$data) {
 
     // replace placeholders
     $file = noNS($id);
-    $page = strtr($file, $conf['sepchar'], ' ');
+    $page = strtr(noNSorNS($id), $conf['sepchar'], ' ');
 
     $tpl = str_replace(
         array(
