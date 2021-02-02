@@ -118,7 +118,7 @@ class Ajax {
     /**
      * Refresh a page lock and save draft
      *
-     * Andreas Gohr <andi@splitbrain.org>
+     * @author Andreas Gohr <andi@splitbrain.org>
      */
     protected function callLock() {
         global $ID;
@@ -155,6 +155,19 @@ class Ajax {
         echo json_encode($response);
     }
 
+    /**
+     * unlock a page
+     *
+     * @author peterfromearth <coder@peterfromearth.de>
+     */
+    protected function call_unlock() {
+        global $INPUT;
+        $id = cleanID($INPUT->str('id'));
+        if(empty($id)) return;
+        
+        unlock($id);
+    }
+    
     /**
      * Delete a draft
      *
