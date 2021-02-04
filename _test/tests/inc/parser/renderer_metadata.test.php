@@ -12,12 +12,12 @@ class renderer_metadata_test extends DokuWikiTest {
      *
      * @throws Exception
      */
-    function setUp() {
+    function setUp() : void{
         parent::setUp();
         $this->R = new Doku_Renderer_metadata();
     }
 
-    function tearDown() {
+    function tearDown() : void {
         unset($this->R);
     }
 

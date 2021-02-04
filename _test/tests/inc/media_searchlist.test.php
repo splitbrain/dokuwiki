@@ -23,7 +23,7 @@ class media_searchlist_test extends DokuWikiTest {
      *
      * @throws Exception
      */
-    function setUp() {
+    function setUp() : void {
         //create some files to search
         $png = mediaFN('wiki:kind_zu_katze.png');
         $ogv = mediaFN('wiki:kind_zu_katze.ogv');

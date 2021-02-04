@@ -14,12 +14,12 @@ class renderer_xhtml_test extends DokuWikiTest {
      *
      * @throws Exception
      */
-    function setUp() {
+    function setUp() : void {
         parent::setUp();
         $this->R = new Doku_Renderer_xhtml();
     }
 
-    function tearDown() {
+    function tearDown() : void {
         unset($this->R);
     }
 

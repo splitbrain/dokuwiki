@@ -6,7 +6,7 @@ require_once 'parser.inc.php';
 
 class TestOfDoku_Parser_File extends TestOfDoku_Parser {
 
-    function setUp() {
+    function setUp() : void {
         parent::setUp();
         $this->P->addMode('file',new File());
     }
@@ -56,4 +56,3 @@ class TestOfDoku_Parser_File extends TestOfDoku_Parser {
     }
 
 }
-

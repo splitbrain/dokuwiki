@@ -8,7 +8,7 @@ class indexer_rename_test extends DokuWikiTest {
 
     private $old_id = 'old_testid';
 
-    function setUp() {
+    function setUp() : void {
         parent::setUp();
         $this->indexer = idx_get_indexer();
         $this->indexer->clear();

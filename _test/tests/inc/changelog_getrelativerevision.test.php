@@ -14,7 +14,7 @@ class changelog_getrelativerevision_test extends DokuWikiTest {
     private $logline = "1362525899	127.0.0.1	E	mailinglist	pubcie	[Data entry] 	\n";
     private $pageid = 'mailinglist';
 
-    function setup() {
+    function setup() : void {
         parent::setup();
         global $cache_revinfo;
         $cache =& $cache_revinfo;

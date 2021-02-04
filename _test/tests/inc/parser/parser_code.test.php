@@ -11,7 +11,7 @@ require_once 'parser.inc.php';
  */
 class TestOfDoku_Parser_Code extends TestOfDoku_Parser {
 
-    function setUp() {
+    function setUp() : void {
         parent::setUp();
         $this->P->addMode('code',new Code());
     }
@@ -353,4 +353,3 @@ class TestOfDoku_Parser_Code extends TestOfDoku_Parser {
     }
 
 }
-

@@ -15,7 +15,7 @@ class sort_without_collator_test extends sort_with_collator_test
     /**
      * Disable the "intl" extension.
      */
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass() : void
     {
         parent::setUpBeforeClass();
         Sort::useIntl(false);
@@ -24,7 +24,7 @@ class sort_without_collator_test extends sort_with_collator_test
     /**
      * Reenable the "intl" extension.
      */
-    public static function tearDownAfterClass()
+    public static function tearDownAfterClass() : void
     {
         Sort::useIntl(true);
         parent::tearDownAfterClass();
@@ -108,7 +108,7 @@ class sort_without_collator_test extends sort_with_collator_test
     /**
      * Provide WRONG sorted sequences of all characters used in the languages
      * being tested, as the fallback sort simply follows character codes.
-     * 
+     *
      * The sorted sequences given in class "sort_with_collator" are simply
      * reordered here, starting with A-Z and continuing with accented characters
      * ordered by character codes.

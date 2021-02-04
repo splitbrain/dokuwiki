@@ -5,7 +5,7 @@
  */
 class InttestsPluginsTest extends DokuWikiTest {
 
-    function setUp() {
+    function setUp() : void {
         $this->pluginsEnabled = array(
             'testing'
         );

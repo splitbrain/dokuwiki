@@ -80,7 +80,7 @@ content: @foo;';
         $this->csstest($in_css, $expected_css, $expected_less);
     }
 
-    public function tearDown() {
+    public function tearDown() : void {
         unlink($this->file);
         unlink($this->import);
         unset($this->file, $this->import);

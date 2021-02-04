@@ -15,7 +15,7 @@ class mysql_plugin_authpdo_test extends DokuWikiTest {
     protected $pass = '';
     protected $port = '';
 
-    public function setUp() {
+    public function setUp() : void {
         parent::setUp();
         $configuration = DOKU_UNITTEST . "{$this->driver}.conf.php";
         if(!file_exists($configuration)) {
@@ -34,7 +34,7 @@ class mysql_plugin_authpdo_test extends DokuWikiTest {
      *
      * it might still be there if something went wrong
      */
-    public function tearDown() {
+    public function tearDown() : void {
         parent::tearDown();
         $this->dropDatabase();
     }

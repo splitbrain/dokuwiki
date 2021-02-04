@@ -36,7 +36,7 @@ class sqlite_plugin_authpdo_test extends DokuWikiTest {
         $this->assertTrue(true); // avoid being marked as risky for having no assertion
     }
 
-    public function setUp() {
+    public function setUp() : void {
         parent::setUp();
         $this->dbfile = tempnam('/tmp/', 'pluginpdo_test_');
         copy(__DIR__ . '/test.sqlite3', $this->dbfile);
@@ -85,7 +85,7 @@ class sqlite_plugin_authpdo_test extends DokuWikiTest {
         $conf['plugin']['authpdo']['leave-group'] = 'DELETE FROM member WHERE uid = :uid AND gid = :gid';
     }
 
-    public function tearDown() {
+    public function tearDown() : void {
         parent::tearDown();
         unlink($this->dbfile);
     }

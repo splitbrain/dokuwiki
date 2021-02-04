@@ -12,7 +12,7 @@ class plugin_usermanager_csv_export_test extends DokuWikiTest {
 
     protected  $usermanager;
 
-    function setUp() {
+    function setUp() : void {
         $this->usermanager = new admin_mock_usermanager();
         parent::setUp();
     }

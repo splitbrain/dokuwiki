@@ -2,7 +2,7 @@
 
 class common_clientIP_test extends DokuWikiTest {
 
-    function setup(){
+    function setup() : void{
         parent::setup();
 
         global $conf;

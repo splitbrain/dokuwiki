@@ -13,13 +13,13 @@ abstract class TestOfDoku_Parser extends DokuWikiTest {
     /** @var  Doku_Handler */
     protected $H;
 
-    function setUp() {
+    function setUp() : void {
         parent::setUp();
         $this->H = new Doku_Handler();
         $this->P = new Parser($this->H);
     }
 
-    function tearDown() {
+    function tearDown() : void {
         unset($this->P);
         unset($this->H);
     }

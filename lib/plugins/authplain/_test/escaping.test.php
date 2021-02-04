@@ -24,7 +24,7 @@ class helper_plugin_authplain_escaping_test extends DokuWikiTest {
         $this->auth = new auth_plugin_authplainharness();
     }
 
-    function setUp() {
+    function setUp() : void {
         global $config_cascade;
         parent::setUp();
         $name = $config_cascade['plainauth.users']['default'];
@@ -32,7 +32,7 @@ class helper_plugin_authplain_escaping_test extends DokuWikiTest {
         $this->reloadUsers();
     }
 
-    function tearDown() {
+    function tearDown() : void {
         global $config_cascade;
         parent::tearDown();
         $name = $config_cascade['plainauth.users']['default'];

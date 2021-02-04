@@ -15,7 +15,7 @@ class XmlRpcServerTest extends DokuWikiTest
 {
     protected $server;
 
-    function setUp()
+    function setUp() : void
     {
         parent::setUp();
         global $conf;
@@ -39,7 +39,7 @@ class XmlRpcServerTest extends DokuWikiTest
 <?xml version="1.0"?>
    <methodCall>
      <methodName>wiki.getPageInfo</methodName>
-     		<param> 
+     		<param>
 			<value>
 				<string>$pageName</string>
 			</value>

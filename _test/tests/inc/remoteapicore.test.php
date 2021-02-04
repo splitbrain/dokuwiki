@@ -15,7 +15,7 @@ class remoteapicore_test extends DokuWikiTest {
     /** @var  Api */
     protected $remote;
 
-    public function setUp() {
+    public function setUp() : void {
         // we need a clean setup before each single test:
         DokuWikiTest::setUpBeforeClass();
 
@@ -35,7 +35,7 @@ class remoteapicore_test extends DokuWikiTest {
         $this->remote = new Api();
     }
 
-    public function tearDown() {
+    public function tearDown() : void {
         parent::tearDown();
 
         global $USERINFO;

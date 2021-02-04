@@ -6,7 +6,7 @@ class auth_acl_test extends DokuWikiTest {
 
     protected $oldAuthAcl;
 
-    function setUp() {
+    function setUp() : void {
         parent::setUp();
         global $AUTH_ACL;
         global $auth;
@@ -14,7 +14,7 @@ class auth_acl_test extends DokuWikiTest {
         $auth = new AuthPlugin();
     }
 
-    function tearDown() {
+    function tearDown() : void {
         global $AUTH_ACL;
         $AUTH_ACL = $this->oldAuthAcl;
 

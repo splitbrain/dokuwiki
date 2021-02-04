@@ -12,7 +12,7 @@ class BulkSubscriptionsSenderTest extends DokuWikiTest
 
     private $originalSubscriptionConfig;
 
-    public function setUp()
+    public function setUp() : void
     {
         parent::setUp();
         global $conf;
@@ -20,7 +20,7 @@ class BulkSubscriptionsSenderTest extends DokuWikiTest
         $conf['subscribers'] = true;
     }
 
-    protected function tearDown()
+    protected function tearDown() : void
     {
         global $conf;
         $conf['subscribers'] = $this->originalSubscriptionConfig;

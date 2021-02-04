@@ -5,7 +5,7 @@
  */
 class TestingDummyPluginIntegrationTest extends DokuWikiTest {
 
-    function setUp() {
+    function setUp() : void {
         $this->pluginsEnabled = array(
             'testing'
         );

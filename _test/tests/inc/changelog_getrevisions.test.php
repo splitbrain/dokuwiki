@@ -31,7 +31,7 @@ class changelog_getrevisions_test extends DokuWikiTest {
     );
     private $pageid = 'mailinglist';
 
-    function setup() {
+    function setup() : void {
         parent::setup();
         global $cache_revinfo;
         $cache =& $cache_revinfo;

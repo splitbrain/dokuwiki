@@ -7,7 +7,7 @@ use dokuwiki\Remote\RemoteException;
 
 class RemoteAPICoreTest {
 
-    function __getRemoteInfo() {
+    function getRemoteInfo() {
         return array(
             'wiki.stringTestMethod' => array(
                 'args' => array(),
@@ -135,7 +135,7 @@ class remote_test extends DokuWikiTest {
     /** @var  Api */
     protected $remote;
 
-    function setUp() {
+    function setUp() : void {
         parent::setUp();
         global $plugin_controller;
         global $conf;
@@ -168,7 +168,7 @@ class remote_test extends DokuWikiTest {
         $auth = new AuthPlugin();
     }
 
-    function tearDown() {
+    function tearDown() : void {
         global $USERINFO;
         $USERINFO = $this->userinfo;
 

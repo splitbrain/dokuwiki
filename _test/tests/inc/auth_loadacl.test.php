@@ -7,14 +7,14 @@
 
 class auth_loadacl_test extends DokuWikiTest {
 
-    function setUp() {
+    function setUp() : void {
         global $USERINFO;
         parent::setUp();
         $_SERVER['REMOTE_USER'] = 'testuser';
         $USERINFO['grps'] = array('foo','bar');
     }
 
-    function tearDown() {
+    function tearDown() : void {
         parent::tearDown();
     }
 
@@ -93,7 +93,7 @@ ACL;
     // FS#2867, '\s' in php regular expressions may match non-space characters utf8 strings
     // this is due to locale setting on the server, which may match bytes '\xA0' and '\x85'
     // these two bytes are present in valid multi-byte UTF-8 characters.
-    // this test will use one, 'ठ' (DEVANAGARI LETTER TTHA, e0 a4 a0).  There are many others. 
+    // this test will use one, 'ठ' (DEVANAGARI LETTER TTHA, e0 a4 a0).  There are many others.
     function test_FS2867() {
         global $USERINFO;
 

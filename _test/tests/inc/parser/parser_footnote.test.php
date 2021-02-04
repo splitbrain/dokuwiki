@@ -16,7 +16,7 @@ require_once 'parser.inc.php';
 
 class TestOfDoku_Parser_Footnote extends TestOfDoku_Parser {
 
-    function setUp() {
+    function setUp() : void {
         parent::setUp();
         $this->P->addMode('footnote',new Footnote());
     }
@@ -398,4 +398,3 @@ class TestOfDoku_Parser_Footnote extends TestOfDoku_Parser {
         $this->assertEquals(array_map('stripbyteindex',$this->H->calls),$calls);
     }
 }
-

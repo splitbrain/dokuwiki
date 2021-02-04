@@ -9,7 +9,7 @@ class fetch_statuscodes_external_test extends DokuWikiTest {
     private $width = 200;
     private $height = 0;
 
-    function setUp() {
+    function setUp() : void {
 
         header('X-Test: check headers working');
         $header_check = function_exists('xdebug_get_headers') ? xdebug_get_headers() : headers_list();

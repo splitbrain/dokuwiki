@@ -4,7 +4,7 @@ class init_clean_id_test extends DokuWikiTest
 {
 
     /** @inheritDoc */
-    function teardown()
+    function teardown() : void
     {
         global $cache_cleanid;
         $cache_cleanid = array();

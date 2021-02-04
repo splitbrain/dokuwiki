@@ -13,7 +13,7 @@ class cache_use_test extends DokuWikiTest {
     /** @var CacheRenderer $cache */
     private $cache;
 
-    function setUp() {
+    function setUp() : void {
         global $ID, $conf;
         parent::setUp();
 

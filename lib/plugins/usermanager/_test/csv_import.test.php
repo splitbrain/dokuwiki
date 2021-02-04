@@ -20,7 +20,7 @@ class plugin_usermanager_csv_import_test extends DokuWikiTest
     protected $usermanager;
     protected $importfile;
 
-    public function setUp()
+    public function setUp() : void
     {
         $this->importfile = tempnam(TMP_DIR, 'csv');
 
@@ -39,7 +39,7 @@ class plugin_usermanager_csv_import_test extends DokuWikiTest
         parent::setUp();
     }
 
-    public function tearDown()
+    public function tearDown() : void
     {
         $_FILES = $this->old_files;
         parent::tearDown();

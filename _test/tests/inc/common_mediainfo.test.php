@@ -1,11 +1,11 @@
 <?php
 
 class common_basicinfo_test extends DokuWikiTest {
- 
-    function setup(){
+
+    function setup() : void {
         parent::setup();
 
-        global $USERINFO; 
+        global $USERINFO;
         $USERINFO = array(
            'pass' => '179ad45c6ce2cb97cf1029e212046e81',
            'name' => 'Arthur Dent',
@@ -15,7 +15,7 @@ class common_basicinfo_test extends DokuWikiTest {
         $_SERVER['REMOTE_USER'] = 'testuser';
         $_SERVER['REMOTE_ADDR'] = '1.2.3.4';
     }
-    
+
     function _get_info() {
         global $USERINFO;
         $info = array (
@@ -27,10 +27,10 @@ class common_basicinfo_test extends DokuWikiTest {
           'ismobile' => false,
           'client' => 'testuser',
         );
-      
+
         return $info;
     }
-    
+
     /**
      * We're interested in the extra keys for $INFO when its a media request
      */
@@ -38,10 +38,10 @@ class common_basicinfo_test extends DokuWikiTest {
         global $NS, $IMG;
         $NS = '';
         $IMG = 'testimage.png';
-         
+
         $info = $this->_get_info();
         $info['image'] = 'testimage.png';
-        
+
         $this->assertEquals(mediainfo(),$info);
     }
 }

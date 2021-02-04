@@ -6,7 +6,7 @@ class css_css_loadfile_test extends DokuWikiTest {
 
     protected $file = '';
 
-    public function setUp() {
+    public function setUp() : void {
         $this->file = tempnam(TMP_DIR, 'css');
     }
 
@@ -90,7 +90,7 @@ class css_css_loadfile_test extends DokuWikiTest {
         }
     }
 
-    public function tearDown() {
+    public function tearDown() : void {
         unlink($this->file);
         unset($this->file);
     }

@@ -50,7 +50,7 @@ abstract class DokuWikiTest extends PHPUnit_Framework_TestCase {
      *
      * This is ran before each test class
      */
-    public static function setUpBeforeClass() {
+    public static function setUpBeforeClass() : void {
         // just to be safe not to delete something undefined later
         if(!defined('TMP_DIR')) die('no temporary directory');
         if(!defined('DOKU_TMP_DATA')) die('no temporary data directory');
@@ -66,7 +66,7 @@ abstract class DokuWikiTest extends PHPUnit_Framework_TestCase {
      * @throws Exception if plugin actions fail
      * @return void
      */
-    public function setUp() {
+    public function setUp() : void {
 
         // reload config
         global $conf, $config_cascade;

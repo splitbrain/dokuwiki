@@ -2,7 +2,7 @@
 
 class auth_nameencode_test extends DokuWikiTest {
 
-    function tearDown() {
+    function tearDown() : void {
         global $cache_authname;
         $cache_authname = array();
     }

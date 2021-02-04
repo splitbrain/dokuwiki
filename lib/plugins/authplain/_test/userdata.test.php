@@ -16,7 +16,7 @@ class userdata_test extends DokuWikiTest
      * Load auth with test conf
      * @throws Exception
      */
-    public function setUp()
+    public function setUp() : void
     {
         parent::setUp();
         global $config_cascade;

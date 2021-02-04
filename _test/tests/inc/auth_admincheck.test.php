@@ -8,7 +8,7 @@ class auth_admin_test extends DokuWikiTest
 
     private $oldauth;
 
-    function setUp()
+    function setUp() : void
     {
         parent::setUp();
         global $auth;
@@ -27,7 +27,7 @@ class auth_admin_test extends DokuWikiTest
         $auth = new AuthCaseInsensitivePlugin();
     }
 
-    function teardown()
+    function teardown() : void
     {
         global $auth;
         global $AUTH_ACL;

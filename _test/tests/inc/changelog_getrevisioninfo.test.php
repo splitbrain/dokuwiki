@@ -15,7 +15,7 @@ class changelog_getrevisionsinfo_test extends DokuWikiTest {
     private $firstlogline = "1374261194	127.0.0.1	E	mailinglist	pubcie		\n";
     private $pageid = 'mailinglist';
 
-    function setup() {
+    function setup() : void {
         parent::setup();
         global $cache_revinfo;
         $cache =& $cache_revinfo;

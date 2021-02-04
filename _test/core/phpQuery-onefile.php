@@ -2230,7 +2230,7 @@ class phpQueryObject
     /**
      * @access private
      */
-    protected function __pseudoClassParam($paramsString) {
+    protected function pseudoClassParam($paramsString) {
         // TODO;
     }
     /**
@@ -2456,7 +2456,7 @@ class phpQueryObject
             'type' => $data ? 'POST' : 'GET',
             'data' => $data,
             'complete' => $callback,
-            'success' => array($this, '__loadSuccess')
+            'success' => array($this, 'loadSuccess')
         );
         phpQuery::ajax($ajax);
         return $this;
@@ -2466,7 +2466,7 @@ class phpQueryObject
      * @param $html
      * @return unknown_type
      */
-    public function __loadSuccess($html) {
+    public function loadSuccess($html) {
         if ($this->_loadSelector) {
             $html = phpQuery::newDocument($html)->find($this->_loadSelector);
             unset($this->_loadSelector);
@@ -4267,21 +4267,21 @@ class phpQueryObject
         $debug = phpQuery::$debug;
         phpQuery::$debug = false;
         foreach($this->stack() as $node)
-            $output .= $this->__dumpTree($node);
+            $output .= $this->dumpTreeInternal($node);
         phpQuery::$debug = $debug;
         print $html
             ? nl2br(str_replace(' ', '&nbsp;', $output))
             : $output;
         return $this;
     }
-    private function __dumpTree($node, $intend = 0) {
+    private function dumpTreeInternal($node, $intend = 0) {
         $whois = $this->whois($node);
         $return = '';
         if ($whois)
             $return .= str_repeat(' - ', $intend).$whois."\n";
         if (isset($node->childNodes))
             foreach($node->childNodes as $chNode)
-                $return .= $this->__dumpTree($chNode, $intend+1);
+                $return .= $this->dumpTreeInternal($chNode, $intend+1);
         return $return;
     }
     /**

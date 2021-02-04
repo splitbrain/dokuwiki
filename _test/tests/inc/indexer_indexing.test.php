@@ -5,7 +5,7 @@
  * @author Michael Hamann <michael@content-space.de>
  */
 class indexer_indexing_test extends DokuWikiTest {
-    public function setUp() {
+    public function setUp() : void {
         parent::setUp();
         saveWikiText('testpage', 'Foo bar baz.', 'Test initialization');
         saveWikiText('notfound', 'Foon barn bazn.', 'Test initialization');
