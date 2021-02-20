@@ -34,7 +34,8 @@ function mimetype($file, $knownonly=true){
     if ($ext === false) {
         return array(false, false, false);
     }
-    $ext = strtolower(substr($file, $ext + 1));
+    $re = '/(?=[^[:alnum:]]).+/';
+    $ext = preg_replace($re, '', strtolower(substr($file, $ext + 1)));
     if (!isset($mtypes[$ext])){
         if ($knownonly) {
             return array(false, false, false);
