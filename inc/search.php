@@ -221,6 +221,9 @@ function search_media(&$data,$base,$file,$type,$lvl,$opts){
     if(preg_match("/\.(jpe?g|gif|png)$/",$file)){
         $info['isimg'] = true;
         $info['meta']  = new JpegMeta($base.'/'.$file);
+    }else if(preg_match("/\.svg$/",$file)){
+        $info['isimg'] = true;
+        $info['meta']  = new JpegMeta($base.'/'.$file); //(object) array() ;
     }else{
         $info['isimg'] = false;
     }
