@@ -78,9 +78,9 @@ class Loader {
      * @return array
      */
     public function loadDefaults() {
-        // load main files
-        global $config_cascade;
-        $conf = $this->loadConfigs($config_cascade['main']['default']);
+
+        // initialize array
+        $conf = array();
 
         // plugins
         foreach($this->plugins as $plugin) {
@@ -103,7 +103,14 @@ class Loader {
                 $this->template
             )
         );
-
+		
+		// load main files
+		global $config_cascade;
+		$conf = array_merge(
+			$conf,
+			$this->loadConfigs($config_cascade['main']['default'])
+		);
+        
         return $conf;
     }
 
