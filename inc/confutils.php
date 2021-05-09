@@ -200,6 +200,8 @@ function getSchemes() {
     return $schemes;
 }
 
+const HTML_SPACE = '&#32;';
+
 /**
  * Builds a hash from an array of lines
  *
@@ -221,21 +223,23 @@ function linesToHash($lines, $lower = false) {
     if(isset($lines[0]) && substr($lines[0], 0, 3) == pack('CCC', 0xef, 0xbb, 0xbf))
         $lines[0] = substr($lines[0], 3);
     foreach($lines as $line) {
-        //ignore comments (except escaped ones)
+        // ignore comments (except escaped ones)
         $line = preg_replace('/(?<![&\\\\])#.*$/', '', $line);
         $line = str_replace('\\#', '#', $line);
         $line = trim($line);
         if($line === '') continue;
         $line = preg_split('/\s+/', $line, 2);
         $line = array_pad($line, 2, '');
-        // Build the associative array
-        if($lower) {
-            $conf[strtolower($line[0])] = $line[1];
-        } else {
-            $conf[$line[0]] = $line[1];
-        }
+        $key = $line[0];
+        if($lower)
+            $key = strtolower($key);
+        $value = $line[1];
+        // allow spaces to be specified as HTML_SPACE entities and replaced with normal spaces
+        $key = str_replace(HTML_SPACE, ' ', $key);
+        $value = str_replace(HTML_SPACE, ' ', $value);
+        // build the associative array
+        $conf[$key] = $value;
     }
-
     return $conf;
 }
 
