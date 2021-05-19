@@ -997,10 +997,10 @@ function media_tab_history($image, $ns, $auth=null) {
 
     if ($auth >= AUTH_READ && $image) {
         if ($do == 'diff'){
-            media_diff($image, $ns, $auth);
+            (new dokuwiki\Ui\MediaDiff($image))->show(); //media_diff($image, $ns, $auth);
         } else {
             $first = $INPUT->int('first');
-            html_revisions($first, $image);
+            (new dokuwiki\Ui\MediaRevisions($image))->show($first);
         }
     } else {
         echo '<div class="nothing">'.$lang['media_perm_read'].'</div>'.NL;
@@ -1017,7 +1017,7 @@ function media_tab_history($image, $ns, $auth=null) {
  *
  * @author Kate Arzamastseva <pshns@ukr.net>
  */
-function media_preview($image, $auth, $rev='', $meta=false) {
+function media_preview($image, $auth, $rev = '', $meta = false) {
 
     $size = media_image_preview_size($image, $rev, $meta);
 
@@ -1041,7 +1041,7 @@ function media_preview($image, $auth, $rev='', $meta=false) {
         echo '<img src="'.$src.'" alt="" style="max-width: '.$size[0].'px;" />';
         echo '</a>';
 
-        echo '</div>'.NL;
+        echo '</div>';
     }
 }
 
@@ -1052,12 +1052,12 @@ function media_preview($image, $auth, $rev='', $meta=false) {
  *
  * @param string     $image media id
  * @param int        $auth  permission level
- * @param string|int $rev   revision timestamp, or empty string
+ * @param int|string $rev   revision timestamp, or empty string
  */
 function media_preview_buttons($image, $auth, $rev = '') {
     global $lang, $conf;
 
-    echo '<ul class="actions">'.DOKU_LF;
+    echo '<ul class="actions">';
 
     if ($auth >= AUTH_DELETE && !$rev && file_exists(mediaFN($image))) {
 
@@ -1071,7 +1071,7 @@ function media_preview_buttons($image, $auth, $rev = '') {
         $form->addTagClose('div');
         echo '<li>';
         echo $form->toHTML();
-        echo '</li>'.DOKU_LF;
+        echo '</li>';
     }
 
     $auth_ow = (($conf['mediarevisions']) ? AUTH_UPLOAD : AUTH_DELETE);
@@ -1087,7 +1087,7 @@ function media_preview_buttons($image, $auth, $rev = '') {
         $form->addTagClose('div');
         echo '<li>';
         echo $form->toHTML();
-        echo '</li>'.DOKU_LF;
+        echo '</li>';
     }
 
     if ($auth >= AUTH_UPLOAD && $rev && $conf['mediarevisions'] && file_exists(mediaFN($image, $rev))) {
@@ -1104,10 +1104,10 @@ function media_preview_buttons($image, $auth, $rev = '') {
         $form->addTagClose('div');
         echo '<li>';
         echo $form->toHTML();
-        echo '</li>'.DOKU_LF;
+        echo '</li>';
     }
 
-    echo '</ul>'.DOKU_LF;
+    echo '</ul>';
 }
 
 /**
@@ -1118,16 +1118,18 @@ function media_preview_buttons($image, $auth, $rev = '') {
  * @param int|string     $rev
  * @param JpegMeta|bool  $meta
  * @param int            $size
- * @return array|false
+ * @return array
  */
-function media_image_preview_size($image, $rev, $meta, $size = 500) {
-    if (!preg_match("/\.(jpe?g|gif|png)$/", $image) || !file_exists(mediaFN($image, $rev))) return false;
+function media_image_preview_size($image, $rev, $meta = false, $size = 500) {
+    if (!preg_match("/\.(jpe?g|gif|png)$/", $image)
+      || !file_exists($filename = mediaFN($image, $rev))
+    ) return array();
 
-    $info = getimagesize(mediaFN($image, $rev));
+    $info = getimagesize($filename);
     $w = (int) $info[0];
     $h = (int) $info[1];
 
-    if($meta && ($w > $size || $h > $size)){
+    if ($meta && ($w > $size || $h > $size)) {
         $ratio = $meta->getResizeRatio($size, $size);
         $w = floor($w * $ratio);
         $h = floor($h * $ratio);
@@ -1145,10 +1147,10 @@ function media_image_preview_size($image, $rev, $meta, $size = 500) {
  * @param string   $alt  alternative value
  * @return string
  */
-function media_getTag($tags,$meta,$alt=''){
-    if($meta === false) return $alt;
+function media_getTag($tags, $meta = false, $alt = '') {
+    if (!$meta) return $alt;
     $info = $meta->getField($tags);
-    if($info == false) return $alt;
+    if (!$info) return $alt;
     return $info;
 }
 
@@ -1163,19 +1165,19 @@ function media_getTag($tags,$meta,$alt=''){
 function media_file_tags($meta) {
     // load the field descriptions
     static $fields = null;
-    if(is_null($fields)){
+    if (is_null($fields)) {
         $config_files = getConfigFiles('mediameta');
         foreach ($config_files as $config_file) {
-            if(file_exists($config_file)) include($config_file);
+            if (file_exists($config_file)) include($config_file);
         }
     }
 
     $tags = array();
 
-    foreach($fields as $key => $tag){
+    foreach ($fields as $key => $tag) {
         $t = array();
         if (!empty($tag[0])) $t = array($tag[0]);
-        if(isset($tag[3]) && is_array($tag[3])) $t = array_merge($t,$tag[3]);
+        if (isset($tag[3]) && is_array($tag[3])) $t = array_merge($t,$tag[3]);
         $value = media_getTag($t, $meta);
         $tags[] = array('tag' => $tag, 'value' => $value);
     }
@@ -1234,65 +1236,10 @@ function media_details($image, $auth, $rev='', $meta=false) {
  * @param int $auth permission level
  * @param bool $fromajax
  * @return false|null|string
+ * @deprecated 2020-12-31
  */
 function media_diff($image, $ns, $auth, $fromajax = false) {
-    global $conf;
-    global $INPUT;
-
-    if ($auth < AUTH_READ || !$image || !$conf['mediarevisions']) return '';
-
-    $rev1 = $INPUT->int('rev');
-
-    $rev2 = $INPUT->ref('rev2');
-    if(is_array($rev2)){
-        $rev1 = (int) $rev2[0];
-        $rev2 = (int) $rev2[1];
-
-        if(!$rev1){
-            $rev1 = $rev2;
-            unset($rev2);
-        }
-    }else{
-        $rev2 = $INPUT->int('rev2');
-    }
-
-    if ($rev1 && !file_exists(mediaFN($image, $rev1))) $rev1 = false;
-    if ($rev2 && !file_exists(mediaFN($image, $rev2))) $rev2 = false;
-
-    if($rev1 && $rev2){            // two specific revisions wanted
-        // make sure order is correct (older on the left)
-        if($rev1 < $rev2){
-            $l_rev = $rev1;
-            $r_rev = $rev2;
-        }else{
-            $l_rev = $rev2;
-            $r_rev = $rev1;
-        }
-    }elseif($rev1){                // single revision given, compare to current
-        $r_rev = '';
-        $l_rev = $rev1;
-    }else{                        // no revision was given, compare previous to current
-        $r_rev = '';
-        $medialog = new MediaChangeLog($image);
-        $revs = $medialog->getRevisions(0, 1);
-        if (file_exists(mediaFN($image, $revs[0]))) {
-            $l_rev = $revs[0];
-        } else {
-            $l_rev = '';
-        }
-    }
-
-    // prepare event data
-    $data = array();
-    $data[0] = $image;
-    $data[1] = $l_rev;
-    $data[2] = $r_rev;
-    $data[3] = $ns;
-    $data[4] = $auth;
-    $data[5] = $fromajax;
-
-    // trigger event
-    return Event::createAndTrigger('MEDIA_DIFF', $data, '_media_file_diff', true);
+    dbg_deprecated('see '. \dokuwiki\Ui\MediaDiff::class .'::show()');
 }
 
 /**
@@ -1300,13 +1247,10 @@ function media_diff($image, $ns, $auth, $fromajax = false) {
  *
  * @param array $data event data
  * @return false|null
+ * @deprecated 2020-12-31
  */
 function _media_file_diff($data) {
-    if(is_array($data) && count($data)===6) {
-        media_file_diff($data[0], $data[1], $data[2], $data[3], $data[4], $data[5]);
-    } else {
-        return false;
-    }
+    dbg_deprecated('see '. \dokuwiki\Ui\MediaDiff::class .'::show()');
 }
 
 /**
@@ -1320,120 +1264,10 @@ function _media_file_diff($data) {
  * @param string $ns
  * @param int $auth permission level
  * @param bool $fromajax
+ * @deprecated 2020-12-31
  */
 function media_file_diff($image, $l_rev, $r_rev, $ns, $auth, $fromajax) {
-    global $lang;
-    global $INPUT;
-
-    $l_meta = new JpegMeta(mediaFN($image, $l_rev));
-    $r_meta = new JpegMeta(mediaFN($image, $r_rev));
-
-    $is_img = preg_match('/\.(jpe?g|gif|png)$/', $image);
-    if ($is_img) {
-        $l_size = media_image_preview_size($image, $l_rev, $l_meta);
-        $r_size = media_image_preview_size($image, $r_rev, $r_meta);
-        $is_img = ($l_size && $r_size && ($l_size[0] >= 30 || $r_size[0] >= 30));
-
-        $difftype = $INPUT->str('difftype');
-
-        if (!$fromajax) {
-            $form = new Form([
-                'id' => 'mediamanager__form_diffview',
-                'action' => media_managerURL([], '&'),
-                'method' => 'get',
-                'class' => 'diffView',
-            ]);
-            $form->addTagOpen('div')->addClass('no');
-            $form->setHiddenField('sectok', null);
-            $form->setHiddenField('mediado', 'diff');
-            $form->setHiddenField('rev2[0]', $l_rev);
-            $form->setHiddenField('rev2[1]', $r_rev);
-            echo $form->toHTML();
-
-            echo NL.'<div id="mediamanager__diff" >'.NL;
-        }
-
-        if ($difftype == 'opacity' || $difftype == 'portions') {
-            media_image_diff($image, $l_rev, $r_rev, $l_size, $r_size, $difftype);
-            if (!$fromajax) echo '</div>';
-            return;
-        }
-    }
-
-    list($l_head, $r_head) = (new dokuwiki\Ui\Diff)->diffHead($l_rev, $r_rev, $image, true);
-
-    ?>
-    <div class="table">
-    <table>
-      <tr>
-        <th><?php echo $l_head; ?></th>
-        <th><?php echo $r_head; ?></th>
-      </tr>
-    <?php
-
-    echo '<tr class="image">';
-    echo '<td>';
-    media_preview($image, $auth, $l_rev, $l_meta);
-    echo '</td>';
-
-    echo '<td>';
-    media_preview($image, $auth, $r_rev, $r_meta);
-    echo '</td>';
-    echo '</tr>'.NL;
-
-    echo '<tr class="actions">';
-    echo '<td>';
-    media_preview_buttons($image, $auth, $l_rev);
-    echo '</td>';
-
-    echo '<td>';
-    media_preview_buttons($image, $auth, $r_rev);
-    echo '</td>';
-    echo '</tr>'.NL;
-
-    $l_tags = media_file_tags($l_meta);
-    $r_tags = media_file_tags($r_meta);
-    // FIXME r_tags-only stuff
-    foreach ($l_tags as $key => $l_tag) {
-        if ($l_tag['value'] != $r_tags[$key]['value']) {
-            $r_tags[$key]['highlighted'] = true;
-            $l_tags[$key]['highlighted'] = true;
-        } else if (!$l_tag['value'] || !$r_tags[$key]['value']) {
-            unset($r_tags[$key]);
-            unset($l_tags[$key]);
-        }
-    }
-
-    echo '<tr>';
-    foreach(array($l_tags,$r_tags) as $tags){
-        echo '<td>'.NL;
-
-        echo '<dl class="img_tags">';
-        foreach($tags as $tag){
-            $value = cleanText($tag['value']);
-            if (!$value) $value = '-';
-            echo '<dt>'.$lang[$tag['tag'][1]].'</dt>';
-            echo '<dd>';
-            if ($tag['highlighted']) {
-                echo '<strong>';
-            }
-            if ($tag['tag'][2] == 'date') echo dformat($value);
-            else echo hsc($value);
-            if ($tag['highlighted']) {
-                echo '</strong>';
-            }
-            echo '</dd>';
-        }
-        echo '</dl>'.NL;
-
-        echo '</td>';
-    }
-    echo '</tr>'.NL;
-
-    echo '</table>'.NL;
-    echo '</div>'.NL;
-
-    if ($is_img && !$fromajax) echo '</div>';
+    dbg_deprecated('see '. \dokuwiki\Ui\MediaDiff::class .'::showFileDiff()');
 }
 
 /**
@@ -1448,32 +1282,10 @@ function media_file_diff($image, $l_rev, $r_rev, $ns, $auth, $fromajax) {
  * @param array  $l_size  array with width and height
  * @param array  $r_size  array with width and height
  * @param string $type
+ * @deprecated 2020-12-31
  */
 function media_image_diff($image, $l_rev, $r_rev, $l_size, $r_size, $type) {
-    if ($l_size != $r_size) {
-        if ($r_size[0] > $l_size[0]) {
-            $l_size = $r_size;
-        }
-    }
-
-    $l_more = array('rev' => $l_rev, 'h' => $l_size[1], 'w' => $l_size[0]);
-    $r_more = array('rev' => $r_rev, 'h' => $l_size[1], 'w' => $l_size[0]);
-
-    $l_src = ml($image, $l_more);
-    $r_src = ml($image, $r_more);
-
-    // slider
-    echo '<div class="slider" style="max-width: '.($l_size[0]-20).'px;" ></div>'.NL;
-
-    // two images in divs
-    echo '<div class="imageDiff ' . $type . '">'.NL;
-    echo '<div class="image1" style="max-width: '.$l_size[0].'px;">';
-    echo '<img src="'.$l_src.'" alt="" />';
-    echo '</div>'.NL;
-    echo '<div class="image2" style="max-width: '.$l_size[0].'px;">';
-    echo '<img src="'.$r_src.'" alt="" />';
-    echo '</div>'.NL;
-    echo '</div>'.NL;
+    dbg_deprecated('see '. \dokuwiki\Ui\MediaDiff::class .'::showImageDiff()');
 }
 
 /**

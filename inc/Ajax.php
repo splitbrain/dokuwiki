@@ -241,14 +241,11 @@ class Ajax {
      * @author Kate Arzamastseva <pshns@ukr.net>
      */
     protected function callMediadiff() {
-        global $NS;
         global $INPUT;
 
         $image = '';
         if($INPUT->has('image')) $image = cleanID($INPUT->str('image'));
-        $NS = getNS($image);
-        $auth = auth_quickaclcheck("$NS:*");
-        media_diff($image, $NS, $auth, true);
+        (new Ui\MediaDiff($image))->preference('fromAjax', true)->show();
     }
 
     /**

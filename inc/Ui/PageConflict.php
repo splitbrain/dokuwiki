@@ -35,7 +35,7 @@ class PageConflict extends Ui
      */
     public function show()
     {
-        global $ID;
+        global $INFO;
         global $lang;
 
         // print intro
@@ -44,7 +44,7 @@ class PageConflict extends Ui
         // create the form
         $form = new Form(['id' => 'dw__editform']);
         $form->addTagOpen('div')->addClass('no');
-        $form->setHiddenField('id', $ID);
+        $form->setHiddenField('id', $INFO['id']);
         $form->setHiddenField('wikitext', $this->text);
         $form->setHiddenField('summary', $this->summary);
 
@@ -56,7 +56,8 @@ class PageConflict extends Ui
 
         print '<br /><br /><br /><br />';
 
-        (new Diff($this->text, false))->show();
+        // print difference
+        (new PageDiff($INFO['id']))->compareWith($this->text)->preference('showIntro', false)->show();
     }
 
 }

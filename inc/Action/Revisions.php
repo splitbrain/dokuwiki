@@ -22,7 +22,7 @@ class Revisions extends AbstractAction
     /** @inheritdoc */
     public function tplContent()
     {
-        global $INPUT;
-        (new Ui\Revisions($INPUT->int('first')))->show();
+        global $INFO, $INPUT;
+        (new Ui\PageRevisions($INFO['id']))->show($INPUT->int('first'));
     }
 }

@@ -22,21 +22,21 @@ class PageDraft extends Ui
     public function show()
     {
         global $INFO;
-        global $ID;
         global $lang;
 
-        $draft = new \dokuwiki\Draft($ID, $INFO['client']);
+        $draft = new \dokuwiki\Draft($INFO['id'], $INFO['client']);
         $text  = $draft->getDraftText();
 
         // print intro
         print p_locale_xhtml('draft');
 
-        (new Diff($text, false))->show();
+        // print difference
+        (new PageDiff($INFO['id']))->compareWith($text)->preference('showIntro', false)->show();
 
         // create the draft form
         $form = new Form(['id' => 'dw__editform']);
         $form->addTagOpen('div')->addClass('no');
-        $form->setHiddenField('id', $ID);
+        $form->setHiddenField('id', $INFO['id']);
         $form->setHiddenField('date', $draft->getDraftDate());
         $form->setHiddenField('wikitext', $text);
 
