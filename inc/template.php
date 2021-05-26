@@ -1651,8 +1651,12 @@ function tpl_getMediaFile($search, $abs = false, &$imginfo = null, $fallback = t
     }
 
     // fetch image data if requested
-    if(!is_null($imginfo)) {
-        $imginfo = getimagesize($file);
+    if (
+		(!is_null($imginfo))
+		&&
+		(!preg_match('#^(https?|ftp)#i',$file))
+	) {
+		$imginfo = getimagesize($file);
     }
 
     // build URL
