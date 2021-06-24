@@ -577,7 +577,11 @@ class HTTPClient {
             $time_used = $this->time() - $this->start;
             if($time_used > $this->timeout)
                 throw new HTTPClientException(sprintf('Timeout while sending %s (%.3fs)',$message, $time_used), -100);
-            if(feof($socket))
+
+            // feof() sometimes hangs until first byte is written
+            // probably fixed around PHP 7.2 in https://github.com/php/php-src/pull/3729
+            if ($written > 0 && feof($socket))
+            if (feof($socket))
                 throw new HTTPClientException("Socket disconnected while writing $message");
 
             // select parameters
