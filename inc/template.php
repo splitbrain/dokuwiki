@@ -307,9 +307,7 @@ function tpl_metaheaders($alt = true) {
                 $head['meta'][] = array('name'=> 'robots', 'content'=> 'noindex,nofollow');
             }
             $canonicalUrl = wl($ID, '', true, '&');
-            if ($ID == $conf['start']) {
-                $canonicalUrl = DOKU_URL;
-            }
+
             $head['link'][] = array('rel'=> 'canonical', 'href'=> $canonicalUrl);
         } else {
             $head['meta'][] = array('name'=> 'robots', 'content'=> 'noindex,follow');
