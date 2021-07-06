@@ -57,6 +57,34 @@ class pageutils_findnearest_test extends DokuWikiTest {
         $this->assertEquals('0', $sidebar);
     }
 
+    function testLikeNSSidebar() {
+        global $ID;
+
+        saveWikiText('foo:bar2:start', 'startPage', '');
+        saveWikiText('foo:bar2:sidebar', 'sidebarInside', '');
+        saveWikiText('foo:bar2:deeper:sidebar', 'sidebarInside2', '');
+
+        $ID = 'foo:bar2';
+        $sidebar = page_findnearest('sidebar');
+        $this->assertEquals('foo:bar2:sidebar', $sidebar);
+
+        $ID = 'foo:bar2:start';
+        $sidebar = page_findnearest('sidebar');
+        $this->assertEquals('foo:bar2:sidebar', $sidebar);
+
+        $ID = 'foo:bar2:newpage';
+        $sidebar = page_findnearest('sidebar');
+        $this->assertEquals('foo:bar2:sidebar', $sidebar);
+
+        $ID = 'foo:bar2:deeper';
+        $sidebar = page_findnearest('sidebar');
+        $this->assertEquals('foo:bar2:deeper:sidebar', $sidebar);
+
+        $ID = 'foo:bar2:deeper:page';
+        $sidebar = page_findnearest('sidebar');
+        $this->assertEquals('foo:bar2:deeper:sidebar', $sidebar);
+    }
+
     function testExistingSidebars() {
         global $ID;
 

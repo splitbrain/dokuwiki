@@ -765,15 +765,19 @@ function utf8_decodeFN($file){
 function page_findnearest($page, $useacl = true){
     if ((string) $page === '') return false;
     global $ID;
-
+    $prevNs = $ID;
     $ns = $ID;
+
     do {
-        $ns = getNS($ns);
         $pageid = cleanID("$ns:$page");
         if(page_exists($pageid) && (!$useacl || auth_quickaclcheck($pageid) >= AUTH_READ)){
             return $pageid;
         }
-    } while($ns !== false);
+
+        $prevNs = $ns;
+        $ns = getNS($ns);
+
+    } while($ns !== $prevNs);
 
     return false;
 }
