@@ -79,6 +79,8 @@ class Editor extends Ui
             'intro_locale' => $intro,
         );
 
+        $this->addToolbar($data, $wr);
+
         if ($data['target'] !== 'section') {
             // Only emit event if page is writable, section edit data is valid and
             // edit target is not section.
@@ -160,16 +162,6 @@ class Editor extends Ui
 
         echo '<div class="editBox" role="application">';
 
-        echo '<div class="toolbar group">';
-        echo '<div id="tool__bar" class="tool__bar">';
-        if ($wr && $data['media_manager']) {
-            echo '<a href="'.DOKU_BASE.'lib/exe/mediamanager.php?ns='.$INFO['namespace'].'" target="_blank">';
-            echo $lang['mediaselect'];
-            echo '</a>';
-        }
-        echo '</div>';
-        echo '</div>';
-
         echo '<div id="draft__status" class="draft__status">';
         $draft = new \dokuwiki\Draft($ID, $INFO['client']);
         if ($draft->isDraftAvailable()) {
@@ -209,4 +201,27 @@ class Editor extends Ui
                 ->id('wiki__text')->addClass('edit');
     }
 
+    /**
+     * Display the toolbar
+     *
+     * @param mixed[] $data
+     * @param bool $wr
+     */
+    public function addToolbar(&$data, $wr)
+    {
+        global $INFO;
+
+        $html = '<div class="toolbar group">';
+        $html .= '<div id="tool__bar" class="tool__bar">';
+        if ($wr && $data['media_manager']) {
+            $html .= '<a href="'.DOKU_BASE.'lib/exe/mediamanager.php?ns='.$INFO['namespace'].'" target="_blank">';
+            $html .= $lang['mediaselect'];
+            $html .= '</a>';
+        }
+        $html .= '</div>';
+        $html .= '</div>';
+
+        /** @var dokuwiki\Form\Form $data['form'] */
+        $data['form']->addHTML($html);
+    }
 }
