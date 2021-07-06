@@ -234,10 +234,16 @@ class auth_plugin_authldap extends DokuWiki_Auth_Plugin
         ldap_free_result($sr);
 
         // general user info
+        $mapping = array(
+            'gid'  => 'gidnumber',
+            'mail' => 'mail',
+            'name' => $this->getConf('mapping_name'),
+        );
+
         $info['dn'] = $user_result['dn'];
-        $info['gid'] = $user_result['gidnumber'][0];
-        $info['mail'] = $user_result['mail'][0];
-        $info['name'] = $user_result['cn'][0];
+        foreach ($mapping as $mapping_key => $mapping_attr) {
+            $info[$mapping_key] = $user_result[strtolower($mapping_attr)][0];
+        }
         $info['grps'] = array();
 
         // overwrite if other attribs are specified.
