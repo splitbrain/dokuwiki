@@ -1131,7 +1131,30 @@ class Doku_Renderer_xhtml extends Doku_Renderer {
             $link['class'] = 'media';
         }
 
-        $address = $this->_xmlEntities($address);
+        // Extra handling if 'mailguard' option is not 'none'
+        // and if more than one request param is present
+        $extra = false;
+        if($conf['mailguard'] != 'none') {
+            $qm_pos = strpos($address, '?');
+            if ($qm_pos !== false) {
+                $amp_pos = strpos($address, '&');
+                if ($amp_pos !== false && $amp_pos > $qm_pos) {
+                    $extra = true;
+                }
+            }
+        }
+        if (!$extra) {
+            // No.
+            $address = $this->_xmlEntities($address);
+        } else {
+            // Yes, keep '&' after '?'
+            $url = substr($address, 0, $qm_pos+1);
+            $url = $this->_xmlEntities($url);
+            $params = substr($address, $qm_pos+1);
+            $params = $this->_xmlEntities($params);
+            $params = str_replace('&amp;', '&', $params);
+            $address = $url.$params;
+        }
         $address = obfuscate($address);
         $title   = $address;
 
