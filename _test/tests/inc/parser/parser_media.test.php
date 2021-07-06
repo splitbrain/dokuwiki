@@ -16,25 +16,25 @@ class TestOfDoku_Parser_Media extends TestOfDoku_Parser {
         $calls = array (
             array('document_start',array()),
             array('p_open',array()),
-            array('externalmedia',array($file,null,null,null,null,'cache','details')),
+            array('externalmedia',array($file,null,null,null,null,'cache','details',array('controls'=>true))),
             array('cdata',array(null)),
             array('p_close',array()),
-            array('document_end',array()),
+            array('document_end',array())
         );
         $this->assertEquals(array_map('stripbyteindex',$parser_response),$calls);
 
         $Renderer = new Doku_Renderer_xhtml();
-        $url = $Renderer->externalmedia($file,null,null,null,null,'cache','details',true);
+        $url = $Renderer->externalmedia($file,null,null,null,null,'cache','details',array('controls'=>true),true);
         //print_r("url: " . $url);
-        $video = '<video class="media" width="320" height="240" controls="controls">';
-        $this->assertEquals(substr($url,0,66),$video);
+        $video = '<video class="media" controls="controls">';
+        $this->assertEquals(substr($url,0,41),$video);
         $source = '<source src="http://some.where.far/away.ogv" type="video/ogg" />';
-        $this->assertEquals(substr($url,67,64),$source);
+        $this->assertEquals(substr($url,42,64),$source);
         // work around random token
         $a_first_part = '<a href="' . DOKU_BASE . 'lib/exe/fetch.php?cache=&amp;tok=';
         $a_second_part = '&amp;media=http%3A%2F%2Fsome.where.far%2Faway.ogv" class="media mediafile mf_ogv" title="http://some.where.far/away.ogv">';
 
-        $substr_start = 132;
+        $substr_start = 107;
         $substr_len = strlen($a_first_part);
         $this->assertEquals($a_first_part, substr($url, $substr_start, $substr_len));
 
@@ -58,7 +58,7 @@ class TestOfDoku_Parser_Media extends TestOfDoku_Parser {
         $calls = array(
             array('document_start', array()),
             array('p_open', array()),
-            array('externalmedia', array($file, null, null, null, null, 'cache', 'details')),
+            array('externalmedia', array($file, null, null, null, null, 'cache', 'details', null)),
             array('cdata', array(null)),
             array('p_close', array()),
             array('document_end', array()),
@@ -66,7 +66,7 @@ class TestOfDoku_Parser_Media extends TestOfDoku_Parser {
         $this->assertEquals(array_map('stripbyteindex', $parser_response), $calls);
 
         $Renderer = new Doku_Renderer_xhtml();
-        $url = $Renderer->externalmedia($file, null, null, null, null, 'cache', 'details', true);
+        $url = $Renderer->externalmedia($file, null, null, null, null, 'cache', 'details', null, true);
         // work around random token
         $a_first_part = '<a href="' . DOKU_BASE . 'lib/exe/fetch.php?tok=';
         $a_second_part = '&amp;media=http%3A%2F%2Fsome.where.far%2Faway.vid" class="media mediafile mf_vid" title="http://some.where.far/away.vid">';
@@ -93,7 +93,7 @@ class TestOfDoku_Parser_Media extends TestOfDoku_Parser {
         $calls = array (
             array('document_start',array()),
             array('p_open',array()),
-            array('internalmedia',array($file,null,null,null,null,'cache','details')),
+            array('internalmedia',array($file,null,null,null,null,'cache','details',array('controls'=>true))),
             array('cdata',array(null)),
             array('p_close',array()),
             array('document_end',array()),
@@ -101,9 +101,9 @@ class TestOfDoku_Parser_Media extends TestOfDoku_Parser {
         $this->assertEquals(array_map('stripbyteindex',$parser_response),$calls);
 
         $Renderer = new Doku_Renderer_xhtml();
-        $url = $Renderer->externalmedia($file,null,null,null,null,'cache','details',true);
+        $url = $Renderer->externalmedia($file,null,null,null,null,'cache','details',array('controls'=>true),true);
 
-        $video = '<video class="media" width="320" height="240" controls="controls" poster="' . DOKU_BASE . 'lib/exe/fetch.php?media=wiki:kind_zu_katze.png">';
+        $video = '<video class="media" controls="controls" poster="' . DOKU_BASE . 'lib/exe/fetch.php?media=wiki:kind_zu_katze.png">';
         $substr_start = 0;
         $substr_len = strlen($video);
         $this->assertEquals($video, substr($url, $substr_start, $substr_len));
@@ -138,7 +138,7 @@ class TestOfDoku_Parser_Media extends TestOfDoku_Parser {
         $title = 'Single quote: \' Ampersand: &';
         
         $Renderer = new Doku_Renderer_xhtml();
-        $url = $Renderer->externalmedia($file, $title, null, null, null, 'cache', 'details', true);
+        $url = $Renderer->externalmedia($file, $title, null, null, null, 'cache', 'details', array('controls'=>true), true);
         
         // make sure the title is escaped just once
         $this->assertEquals(htmlspecialchars($title), substr($url, 28, 32));
@@ -151,7 +151,7 @@ class TestOfDoku_Parser_Media extends TestOfDoku_Parser {
         $calls = array (
             array('document_start',array()),
             array('p_open',array()),
-            array('internalmedia',array($file,'This is a simple text.',null,null,null,'cache','details')),
+            array('internalmedia',array($file,'This is a simple text.',null,null,null,'cache','details',null)),
             array('cdata',array(null)),
             array('p_close',array()),
             array('document_end',array()),
@@ -166,7 +166,7 @@ class TestOfDoku_Parser_Media extends TestOfDoku_Parser {
         $calls = array (
             array('document_start',array()),
             array('p_open',array()),
-            array('internalmedia',array($file,'We got a { here.',null,null,null,'cache','details')),
+            array('internalmedia',array($file,'We got a { here.',null,null,null,'cache','details',null)),
             array('cdata',array(null)),
             array('p_close',array()),
             array('document_end',array()),
@@ -181,7 +181,7 @@ class TestOfDoku_Parser_Media extends TestOfDoku_Parser {
         $calls = array (
             array('document_start',array()),
             array('p_open',array()),
-            array('internalmedia',array($file,'We got a } here.',null,null,null,'cache','details')),
+            array('internalmedia',array($file,'We got a } here.',null,null,null,'cache','details',null)),
             array('cdata',array(null)),
             array('p_close',array()),
             array('document_end',array()),
@@ -196,7 +196,7 @@ class TestOfDoku_Parser_Media extends TestOfDoku_Parser {
         $calls = array (
             array('document_start',array()),
             array('p_open',array()),
-            array('internalmedia',array($file,'We got a { and a } here.',null,null,null,'cache','details')),
+            array('internalmedia',array($file,'We got a { and a } here.',null,null,null,'cache','details',null)),
             array('cdata',array(null)),
             array('p_close',array()),
             array('document_end',array()),

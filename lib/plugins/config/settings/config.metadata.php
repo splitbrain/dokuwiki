@@ -189,6 +189,16 @@ $meta['im_convert']  = array('im_convert');
 $meta['jpg_quality'] = array('numeric','_pattern' => '/^100$|^[1-9]?[0-9]$/');  //(0-100)
 $meta['fetchsize']   = array('numeric');
 $meta['refcheck']    = array('onoff');
+$meta['video_settings'] = array(
+    'multicheckbox',
+    '_choices' => array(
+        'autoplay',
+        'controls',
+        'loop',
+        'muted'
+    ),
+    '_other' => "never"
+);
 
 $meta['_notifications'] = array('fieldset');
 $meta['subscribers']    = array('onoff');

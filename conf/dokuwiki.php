@@ -100,6 +100,7 @@ $conf['gdlib']       = 2;                //the GDlib version (0, 1 or 2) 2 tries
 $conf['im_convert']  = '';               //path to ImageMagicks convert (will be used instead of GD)
 $conf['jpg_quality'] = '70';             //quality of compression when scaling jpg images (0-100)
 $conf['fetchsize']   = 0;                //maximum size (bytes) fetch.php may download from extern, disabled by default
+$conf['video_settings'] = 'controls';            //comma separated list of video embed attributes
 
 /* Notification Settings */
 $conf['subscribers'] = 0;                //enable change notice subscription support

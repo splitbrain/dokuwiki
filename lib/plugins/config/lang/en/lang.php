@@ -137,6 +137,7 @@ $lang['gdlib']       = 'GD Lib version';
 $lang['im_convert']  = 'Path to ImageMagick\'s convert tool';
 $lang['jpg_quality'] = 'JPG compression quality (0-100)';
 $lang['fetchsize']   = 'Maximum size (bytes) fetch.php may download from external URLs, eg. to cache and resize external images.';
+$lang['video_settings'] = 'Select default attributes for video embeds';
 
 /* Notification Settings */
 $lang['subscribers'] = 'Allow users to subscribe to page changes by email';

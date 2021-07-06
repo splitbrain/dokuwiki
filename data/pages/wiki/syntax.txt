@@ -164,6 +164,21 @@ Of course, you can add a title (displayed as a tooltip by most browsers), too.
 
 For linking an image to another page see [[#Image Links]] above.
 
+==== Video-specific flags ====
+There are a few flags that can be applied specifically to [[doku>video|video]] files. Each flag has an opposite to also turn that flag off, if said flag is the default behavior. These flags can be combined with resizing, alignment and caching-related settings. 
+
+| ''controls''  | ''nocontrols''  | display or hide the media controls on the video     |
+| ''loop''      | ''noloop''      | whether to start the video over once it ends        |
+| ''autoplay''  | ''noautoplay''  | whether the video should start playing on page load |
+| ''muted''     | ''nomuted''     | whether the video should play with sound on by default |
+
+Example:
+  {{ :wiki:elephants-dream.webm?400&muted&autoplay&nocontrols&loop }}
+
+This would embed a video that autoplays on loop, with no sound and no media controls visible. 
+
+The default behavior for a video embed is controlled in [[doku>config:video_settings|config:video_settings]].
+
 ==== Supported Media Formats ====
 
 DokuWiki can embed the following media formats directly.
