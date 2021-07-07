@@ -944,7 +944,7 @@ function checklock($id) {
 
     //my own lock
     @list($ip, $session) = explode("\n", io_readFile($lock));
-    if($ip == $INPUT->server->str('REMOTE_USER') || $ip == clientIP() || (session_id() && $session == session_id())) {
+    if($ip == $INPUT->server->str('REMOTE_USER') || (session_id() && $session == session_id())) {
         return false;
     }
 
@@ -990,7 +990,7 @@ function unlock($id) {
     $lock = wikiLockFN($id);
     if(file_exists($lock)) {
         @list($ip, $session) = explode("\n", io_readFile($lock));
-        if($ip == $INPUT->server->str('REMOTE_USER') || $ip == clientIP() || $session == session_id()) {
+        if($ip == $INPUT->server->str('REMOTE_USER') || $session == session_id()) {
             @unlink($lock);
             return true;
         }
