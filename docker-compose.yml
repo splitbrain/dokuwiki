@@ -1,0 +1,18 @@
+version: '3'
+services:
+  fpm:
+    image: php:fpm
+    volumes:
+      - ./:/var/www/html
+    ports:
+  nginx:
+    image: nginx:stable
+    depends_on:
+      - fpm
+    volumes:
+      - ./:/var/www/html
+      - ./conf/nginx.conf:/etc/nginx/conf.d/default.conf
+    ports:
+      - "80:80"
+    links:
+      - fpm
