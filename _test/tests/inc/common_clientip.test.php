@@ -201,6 +201,25 @@ class common_clientIP_test extends DokuWikiTest {
         $this->assertEquals($out, clientIP());
     }
 
+
+    // IPv6
+
+    function test_simple_single_ipv6(){
+        $_SERVER['REMOTE_ADDR']          = '1234:1234:1234:1234:1234:1234:1234:1234';
+        $_SERVER['HTTP_X_REAL_IP']       = '';
+        $_SERVER['HTTP_X_FORWARDED_FOR'] = '';
+        $out = '1234:1234:1234:1234:1234:1234:1234:1234';
+        $this->assertEquals($out, clientIP(true));
+    }
+
+    function test_proxyhops_garbage_all_ipv4_and_ipv6(){
+        $_SERVER['REMOTE_ADDR']          = '1234:1234:1234:1234:1234:1234:1234:1234';
+        $_SERVER['HTTP_X_REAL_IP']       = '1.1.1.1';
+        $_SERVER['HTTP_X_FORWARDED_FOR'] = '777:777:777:777:777:777:777:777,::1,skipme,66.66.66.66';
+        $out = '1234:1234:1234:1234:1234:1234:1234:1234,777:777:777:777:777:777:777:777,::1,66.66.66.66,1.1.1.1';
+        $this->assertEquals($out, clientIP());
+    }
+
 }
 
 //Setup VIM: ex: et ts=4 :
