@@ -52,6 +52,7 @@ function checkUpdateMessages(){
     }
 
     $data = io_readFile($cf);
+    trigger_event('UPGRADE_MSG_PREPROCESS', $data);
     // show messages through the usual message mechanism
     $msgs = explode("\n%\n",$data);
     foreach($msgs as $msg){
