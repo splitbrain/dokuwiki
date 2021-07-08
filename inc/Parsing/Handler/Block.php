@@ -43,7 +43,6 @@ class Block
         'section_close',
     );
 
-
     /**
      * Constructor. Adds loaded syntax plugins to the block and stack
      * arrays
@@ -148,7 +147,13 @@ class Block
         // open first paragraph
         $this->openParagraph(0);
         foreach ($calls as $key => $call) {
+            //print_r($call);
+            //echo '<br>';
             $cname = $call[0];
+
+            $plugin_open = false;
+            $plugin_close = false;
+
             if ($cname == 'plugin') {
                 $cname='plugin_'.$call[1][0];
                 $plugin = true;
@@ -157,6 +162,22 @@ class Block
             } else {
                 $plugin = false;
             }
+
+            /* cdata */
+            // Force opening of paragraph when in cdata and not between p_open or p_close
+            // and in between quote_open and quote_close
+            if (($cname === 'cdata' && rtrim($call[0], "\n\r\t") !== '' && $calls[$key][0] != 'p_open')
+                || (isset($calls[$key-1][0]) && $calls[$key-1][0] != 'p_open'
+                && $calls[$key-1][0] != 'p_close')) {
+
+                if ($calls[$key-1][0] == 'quote_open' || $calls[$key-1][0] == 'quote_close') {
+                    if (!$this->inParagraph) $this->openParagraph($call[2]);
+                } elseif ($this->inParagraph && ($calls[$key-1][0] == 'quote_close' ||
+                    $calls[$key+1][0] == 'p_close'))  {
+                    $this->closeParagraph($call[2]);
+                }
+            }
+
             /* stack */
             if (in_array($cname, $this->stackClose) && (!$plugin || $plugin_close)) {
                 $this->closeParagraph($call[2]);
@@ -184,6 +205,7 @@ class Block
                 $this->storeCall($call);
                 continue;
             }
+
             /* eol */
             if ($cname == 'eol') {
                 // Check this isn't an eol instruction to skip...
