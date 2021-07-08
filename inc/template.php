@@ -1781,11 +1781,13 @@ function tpl_media() {
 }
 
 /**
- * Return useful layout classes
+ * Return useful layout classes based on mode, pagename, namespace,
+ * existence, template, etc...
  *
  * @author Anika Henke <anika@selfthinker.org>
+ * @author Schplurtz le Déboulonné <Schplurtz@laposete.net>
  *
- * @return string
+ * @return string space separated list of css class name
  */
 function tpl_classes() {
     global $ACT, $conf, $ID, $INFO;
@@ -1800,6 +1802,25 @@ function tpl_classes() {
         (isset($INFO) && $INFO['exists']) ? '' : 'notFound',
         ($ID == $conf['start']) ? 'home' : '',
     );
+    $id=$ID;
+    if($id[0] == ':')
+        $id = substr($id,1);
+    $id = str_replace('_', '__', $id);
+    $chain = explode(':', $id);
+    $pgname = array_pop($chain);
+
+    $classes[] = 'dwl_' . count($chain);
+    $ns = 'dwn_';
+    foreach($chain as $comp) {
+        $ns .= "_$comp";
+        $classes[] = $ns;
+    }
+    $parent = array_pop($chain);
+    $classes[] = "dwn_{$parent}_";
+    $classes[] = 'dwp_'.$pgname;
+    if('' != $parent)
+        $classes[] = 'dwp_' . str_replace(':', '_', $id);
+
     return join(' ', $classes);
 }
 
