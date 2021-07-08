@@ -151,6 +151,7 @@ class auth_plugin_authldap extends DokuWiki_Auth_Plugin
      */
     public function getUserData($user, $requireGroups = true)
     {
+        $user = strtolower($user);
         return $this->fetchUserData($user);
     }
 
