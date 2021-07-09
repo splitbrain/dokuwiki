@@ -30,11 +30,37 @@ class Doku_Handler {
     /** @var bool should blocks be rewritten? FIXME seems to always be true */
     protected $rewriteBlocks = true;
 
+    /** @var string|null the currently processed page, null for on the fly renders */
+    protected $page = null;
+
     /**
      * Doku_Handler constructor.
      */
     public function __construct() {
         $this->callWriter = new CallWriter($this);
+    }
+
+    /**
+     * Set the currently processed page
+     *
+     * @param string $id
+     */
+    public function setPage($id)
+    {
+        $this->page = $id;
+    }
+
+    /**
+     * Get the currently processed page
+     *
+     * This may return null when the parsing/handling process is called "on the fly", eg. to
+     * render a wiki text snippet somewhere.
+     *
+     * @return string|null
+     */
+    public function getPage()
+    {
+        return $this->page;
     }
 
     /**

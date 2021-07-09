@@ -80,7 +80,7 @@ function p_wiki_xhtml($id, $rev='', $excuse=true,$date_at=''){
     if($rev || $date_at){
         if(file_exists($file)){
             //no caching on old revisions
-            $ret = p_render('xhtml',p_get_instructions(io_readWikiPage($file,$id,$rev)),$info,$date_at);
+            $ret = p_render('xhtml',p_get_instructions(io_readWikiPage($file,$id,$rev), $id),$info,$date_at);
         }elseif($excuse){
             $ret = p_locale_xhtml('norev');
         }
@@ -193,27 +193,32 @@ function p_cached_instructions($file,$cacheonly=false,$id='') {
 /**
  * turns a page into a list of instructions
  *
- * @author Harry Fuecks <hfuecks@gmail.com>
+ * @param string $text raw wiki syntax text
+ * @param string $id optional hint on the currently processed page
+ * @return array a list of instruction arrays
  * @author Andreas Gohr <andi@splitbrain.org>
  *
- * @param string $text  raw wiki syntax text
- * @return array a list of instruction arrays
+ * @author Harry Fuecks <hfuecks@gmail.com>
  */
-function p_get_instructions($text){
+function p_get_instructions($text, $id=''){
 
     $modes = p_get_parsermodes();
 
     // Create the parser and handler
-    $Parser = new Parser(new Doku_Handler());
+    $handler = new Doku_Handler();
+    if($id !== '') {
+        $handler->setPage($id);
+    }
+    $parser = new Parser($handler);
 
     //add modes to parser
     foreach($modes as $mode){
-        $Parser->addMode($mode['mode'],$mode['obj']);
+        $parser->addMode($mode['mode'],$mode['obj']);
     }
 
     // Do the parsing
     Event::createAndTrigger('PARSER_WIKITEXT_PREPROCESS', $text);
-    $p = $Parser->parse($text);
+    $p = $parser->parse($text);
     //  dbg($p);
     return $p;
 }
