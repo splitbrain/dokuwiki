@@ -252,7 +252,7 @@ function _io_saveFile($file, $content, $append) {
         fclose($fh);
     }
 
-    if(!$fileexists and $conf['fperm']) chmod($file, $conf['fperm']);
+    if(!$fileexists and !empty($conf['fperm'])) chmod($file, $conf['fperm']);
     return true;
 }
 
