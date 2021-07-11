@@ -1,0 +1,103 @@
+/**
+ * This file provides styles for larger screens.
+ *
+ * @author Anika Henke <anika@selfthinker.org>
+ */
+
+/* for large screen widths
+********************************************************************/
+@media only screen and (min-width: 1500px) {
+
+#dokuwiki__site {
+    max-width: 100%;
+}
+
+#dokuwiki__header + div.wrapper {
+    max-width: @ini_site_width;
+}
+
+#dokuwiki__site > .site {
+    display: flex;
+    justify-content: center;
+    padding: 0 2em;
+}
+
+#dokuwiki__header,
+#dokuwiki__header + div.wrapper,
+#dokuwiki__footer {
+    padding: 2em 0 0;
+}
+
+#dokuwiki__header,
+#dokuwiki__footer {
+    width: 18em;
+}
+
+#dokuwiki__header {
+    .pad {
+        padding: 0 40px 0 0;
+    }
+
+    .headings,
+    .tools {
+        float: none;
+        text-align: left;
+        width: auto;
+
+        li {
+            display: inline-block;
+            margin: 0 1em 0 0;
+        }
+    }
+    .tools {
+        display: flex;
+        flex-direction: column-reverse;
+    }
+
+    form.search {
+        input.edit {
+            width: 100%;
+        }
+        div.ajax_qsearch {
+            left: 0;
+            top: 2.4em;
+        }
+    }
+}
+
+#dokuwiki__usertools,
+#dokuwiki__sitetools {
+    text-align: left;
+    padding-bottom: 1.5em;
+}
+#dokuwiki__usertools {
+    position: static;
+}
+
+#dokuwiki__pagetools {
+    top: 4em;
+}
+
+#dokuwiki__aside {
+    padding-top: .5em;
+}
+
+#dokuwiki__footer {
+    padding-left: 1em;
+    .pad {
+        padding: 0 0 0 40px;
+    }
+}
+
+} /* /@media */
+
+
+/* for even larger screen widths
+********************************************************************/
+@media only screen and (min-width: 1800px) {
+
+body {
+    font-size: 100%;
+}
+
+} /* /@media */
