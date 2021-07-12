@@ -8,6 +8,7 @@
 
 use dokuwiki\Extension\AdminPlugin;
 use dokuwiki\Extension\Event;
+use dokuwiki\Utils\PageResolver;
 
 /**
  * Access a template file
@@ -457,12 +458,14 @@ function tpl_pagelink($id, $name = null, $return = false) {
  * @return false|string
  */
 function tpl_getparent($id) {
+    $resolver = new PageResolver('root');
+
     $parent = getNS($id).':';
-    resolve_pageid('', $parent, $exists);
+    $parent = $resolver->resolveId($parent);
     if($parent == $id) {
         $pos    = strrpos(getNS($id), ':');
         $parent = substr($parent, 0, $pos).':';
-        resolve_pageid('', $parent, $exists);
+        $parent = $resolver->resolveId($parent);
         if($parent == $id) return false;
     }
     return $parent;
@@ -800,11 +803,13 @@ function tpl_youarehere($sep = null, $return = false) {
     }
 
     // print current page, skipping start page, skipping for namespace index
-    resolve_pageid('', $page, $exists);
-    if (isset($page) && $page == $part.$parts[$i]) {
-        if($return) return $out;
-        print $out;
-        return true;
+    if (isset($page)) {
+        $page = (new PageResolver('root'))->resolveId($page);
+        if ($page == $part . $parts[$i]) {
+            if ($return) return $out;
+            print $out;
+            return true;
+        }
     }
     $page = $part.$parts[$i];
     if($page == $conf['start']) {

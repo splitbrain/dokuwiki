@@ -1,6 +1,8 @@
 <?php
 
 use dokuwiki\ChangeLog\MediaChangeLog;
+use dokuwiki\Utils\MediaResolver;
+use dokuwiki\Utils\PageResolver;
 
 /**
  * Renderer for XHTML output
@@ -891,7 +893,8 @@ class Doku_Renderer_xhtml extends Doku_Renderer {
         $default = $this->_simpleTitle($id);
 
         // now first resolve and clean up the $id
-        resolve_pageid(getNS($ID), $id, $exists, $this->date_at, true);
+        $id = (new PageResolver($ID))->resolveId($id, $this->date_at, true);
+        $exists = page_exists($id, $this->date_at, false, true);
 
         $link = array();
         $name = $this->_getLinkTitle($name, $default, $isImage, $id, $linktype);
@@ -1172,7 +1175,8 @@ class Doku_Renderer_xhtml extends Doku_Renderer {
         if (strpos($src, '#') !== false) {
             list($src, $hash) = explode('#', $src, 2);
         }
-        resolve_mediaid(getNS($ID), $src, $exists, $this->date_at, true);
+        $src = (new MediaResolver($ID))->resolveId($src,$this->date_at,true);
+        $exists = media_exists($src);
 
         $noLink = false;
         $render = ($linking == 'linkonly') ? false : true;
@@ -1787,7 +1791,7 @@ class Doku_Renderer_xhtml extends Doku_Renderer {
         // see internalmedia() and externalmedia()
         list($img['src']) = explode('#', $img['src'], 2);
         if($img['type'] == 'internalmedia') {
-            resolve_mediaid(getNS($ID), $img['src'], $exists ,$this->date_at, true);
+            $img['src'] = (new MediaResolver($ID))->resolveId($img['src'], $this->date_at, true);
         }
 
         return $this->_media(

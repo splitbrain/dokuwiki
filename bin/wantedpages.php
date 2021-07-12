@@ -1,9 +1,10 @@
 #!/usr/bin/env php
 <?php
 
+use dokuwiki\Utf8\Sort;
+use dokuwiki\Utils\PageResolver;
 use splitbrain\phpcli\CLI;
 use splitbrain\phpcli\Options;
-use dokuwiki\Utf8\Sort;
 
 if(!defined('DOKU_INC')) define('DOKU_INC', realpath(dirname(__FILE__) . '/../') . '/');
 define('NOSESSION', 1);
@@ -161,14 +162,12 @@ class WantedPagesCLI extends CLI {
     protected function internalLinks($page) {
         global $conf;
         $instructions = p_get_instructions(file_get_contents($page['file']));
-        $cns = getNS($page['id']);
-        $exists = false;
+        $resolver = new PageResolver($page['id']);
         $pid = $page['id'];
         foreach($instructions as $ins) {
             if($ins[0] == 'internallink' || ($conf['camelcase'] && $ins[0] == 'camelcaselink')) {
-                $mid = $ins[1][0];
-                resolve_pageid($cns, $mid, $exists);
-                if(!$exists) {
+                $mid = $resolver->resolveId($ins[1][0]);
+                if(!page_exists($mid)) {
                     list($mid) = explode('#', $mid); //record pages without hashes
 
                     if($this->sort == 'origin') {

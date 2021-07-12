@@ -477,11 +477,12 @@ class Doku_Renderer_metadata extends Doku_Renderer
         $default = $this->_simpleTitle($id);
 
         // first resolve and clean up the $id
-        resolve_pageid(getNS($ID), $id, $exists);
+        $resolver = new \dokuwiki\Utils\PageResolver($ID);
+        $id = $resolver->resolveId($id);
         @list($page) = explode('#', $id, 2);
 
         // set metadata
-        $this->meta['relation']['references'][$page] = $exists;
+        $this->meta['relation']['references'][$page] = page_exists($page);
         // $data = array('relation' => array('isreferencedby' => array($ID => true)));
         // p_set_metadata($id, $data);
 
@@ -721,7 +722,7 @@ class Doku_Renderer_metadata extends Doku_Renderer
 
         list($src) = explode('#', $src, 2);
         if (!media_isexternal($src)) {
-            resolve_mediaid(getNS($ID), $src, $exists);
+            $src = (new \dokuwiki\Utils\MediaResolver($ID))->resolveId($src);
         }
         if (preg_match('/.(jpe?g|gif|png)$/i', $src)) {
             $this->firstimage = $src;
@@ -741,8 +742,9 @@ class Doku_Renderer_metadata extends Doku_Renderer
         if (media_isexternal($src)) {
             return;
         }
-        resolve_mediaid(getNS($ID), $src, $exists);
-        $this->meta['relation']['media'][$src] = $exists;
+        $src = (new \dokuwiki\Utils\MediaResolver($ID))->resolveId($src);
+        $file = mediaFN($src);
+        $this->meta['relation']['media'][$src] = file_exists($file);
     }
 
     #endregion
