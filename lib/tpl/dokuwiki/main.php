@@ -52,7 +52,7 @@ $showSidebar = $hasSidebar && ($ACT=='show');
 
                 <div class="pageId"><span><?php echo hsc($ID) ?></span></div>
 
-                <div class="page group">
+                <div class="page group" dir="auto">
                     <?php tpl_flush() ?>
                     <?php tpl_includeFile('pageheader.html') ?>
                     <!-- wikipage start -->
